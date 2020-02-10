@@ -1,13 +1,4 @@
 ## 顧小培 別吃人血饅頭了
-
-You can use the [editor on GitHub](https://github.com/examino/examino.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
 ```markdown
 “可以用以「備戰」的策略，包括服用補健食品。在這方面，綠茶素和洋蔥素都能在日常膳食以外，補充身體之不足。綠茶素和洋蔥素能抑制激酶。綠茶素和洋蔥素也都能抑制「神經胺酸酶」，令病毒不能走出細胞肆虐，更不會在空氣中傳播。”
 -節錄自頋小培“新型冠狀病毒備戰工程”
