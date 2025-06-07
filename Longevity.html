@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Longevity & Men's Health Supplement Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Neutrals & Health Tones -->
+    <!-- Application Structure Plan: The application uses a thematic, interactive dashboard structure. It's divided into four main logical sections: a clear Introduction with a disclaimer, two core interactive "explore" sections for 'Foundational Longevity' and 'Targeted Men's Health' supplements, and a final 'Synergy, Safety & Stack Builder' section. This structure was chosen to transform the passive report into an active tool. Users can explore supplements non-linearly via a card-based system. Clicking a card expands it to show details, preventing information overload. A key interaction is the "Add to Stack" button on each card, which dynamically populates a personalized list in the final section. This provides a clear, actionable takeaway, directly aligning with the user's goal of building a supplement stack. This architecture prioritizes usability and task completion over mirroring the original report's linear format. -->
+    <!-- Visualization & Content Choices: Data is presented through interactive cards to organize content. Goal: Inform/Compare. Method: HTML/CSS cards with JS-driven expand/collapse. Justification: Reduces cognitive load, allows user-paced discovery. For dosage comparisons (e.g., NMN), a bar chart is used. Goal: Compare. Method: Chart.js Canvas. Justification: Visualizing dosage ranges (effective vs. tolerated) is more intuitive than text. Critical info like bioavailability (Curcumin + Piperine) or safety warnings (Zinc/Copper) is highlighted with icons and colored boxes. Goal: Inform/Warn. Method: HTML/CSS with Unicode icons. Justification: Draws immediate user attention to crucial practical advice. The 'Stack Builder' dynamically compiles user choices. Goal: Organize/Synthesize. Method: JS-populated HTML list. Justification: Provides a tangible, personalized summary of the user's exploration. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #374151;
+        }
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out;
+        }
+        .card.open .card-content {
+            max-height: 1500px;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #3B82F6;
+            border-bottom-color: #3B82F6;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+         @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-40 shadow-sm">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800">Longevity Stack Guide</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Introduction</a>
+                        <a href="#foundational" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Foundational Longevity</a>
+                        <a href="#mens-health" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Men's Health</a>
+                        <a href="#synergy-safety" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">Synergy & Safety</a>
+                        <a href="#stack-builder" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-700">My Stack</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <select id="mobile-nav" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <option value="#introduction">Introduction</option>
+                        <option value="#foundational">Foundational</option>
+                        <option value="#mens-health">Men's Health</option>
+                        <option value="#synergy-safety">Synergy/Safety</option>
+                        <option value="#stack-builder">My Stack</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <!-- Introduction Section -->
+        <section id="introduction" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Your Guide to a Longer Healthspan</h2>
+            <p class="text-lg text-gray-600 mb-6">This interactive application translates the complex science of longevity and men's health into a practical, explorable guide. The goal is to help you understand the evidence behind key supplements and build a personalized stack based on your goals. Explore the sections below to learn about compounds that target core aging processes and support male physiology.</p>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-800 p-4 rounded-md shadow" role="alert">
+                <h3 class="font-bold text-lg">Crucial Disclaimer: For Educational Purposes Only</h3>
+                <p class="mt-2">The information provided here is not medical advice. Always consult with a qualified healthcare professional before starting any new supplement regimen. Self-treating based on this information can have serious health consequences. Your doctor can assess your individual needs and potential drug interactions.</p>
+            </div>
+        </section>
+
+        <!-- Foundational Anti-Aging Supplements Section -->
+        <section id="foundational" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Foundational Longevity</h2>
+            <p class="text-lg text-gray-600 mb-8">This section covers supplements that target the fundamental processes of aging at a cellular level. Click on any supplement to expand its details and add it to your personalized stack.</p>
+            <div id="foundational-supplements-container" class="space-y-4">
+            </div>
+        </section>
+
+        <!-- Targeted Men's Health Supplements Section -->
+        <section id="mens-health" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Targeted Men's Health</h2>
+            <p class="text-lg text-gray-600 mb-8">Here we focus on supplements specifically beneficial for male physiology, such as prostate health and hormonal balance. Explore each one to understand its role and benefits.</p>
+            <div id="mens-health-supplements-container" class="space-y-4">
+            </div>
+        </section>
+        
+        <!-- Synergy, Safety & Stack Builder -->
+        <section id="synergy-safety" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Synergy & Safety</h2>
+            <p class="text-lg text-gray-600 mb-8">Maximizing benefits and ensuring safety are key. This section highlights important supplement pairings (synergies) and critical safety considerations, like potential drug interactions.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Synergy Column -->
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <span class="text-green-500 mr-3">🔗</span> Nutrient Synergies
+                    </h3>
+                    <p class="text-gray-600 mb-6">Certain supplements work better together. Combining them can enhance absorption or provide additive effects. Here are key pairs to consider:</p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="bg-green-100 text-green-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">✓</span>
+                            <div>
+                                <h4 class="font-semibold text-gray-700">Collagen + Vitamin C</h4>
+                                <p class="text-gray-600">Vitamin C is a vital cofactor for your body's own collagen production, enhancing the benefits of supplementation.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-green-100 text-green-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">✓</span>
+                             <div>
+                                <h4 class="font-semibold text-gray-700">Curcumin + Piperine</h4>
+                                <p class="text-gray-600">Piperine (from black pepper) dramatically increases curcumin's bioavailability by up to 2000%.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="bg-green-100 text-green-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">✓</span>
+                           <div>
+                                <h4 class="font-semibold text-gray-700">Vitamin D + Omega-3 + Exercise</h4>
+                                <p class="text-gray-600">This combination showed additive benefits in slowing biological aging in a major clinical trial (DO-HEALTH).</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="bg-green-100 text-green-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">✓</span>
+                           <div>
+                                <h4 class="font-semibold text-gray-700">Saw Palmetto + Beta-sitosterol</h4>
+                                <p class="text-gray-600">Combination formulas for prostate health often show enhanced symptomatic relief for BPH.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Safety Column -->
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
+                       <span class="text-red-500 mr-3">⚠️</span> Safety & Interactions
+                    </h3>
+                     <p class="text-gray-600 mb-6">Supplements can interact with medications. This is not a complete list. <strong class="font-semibold">Always discuss with your doctor.</strong></p>
+                    <ul class="space-y-4">
+                         <li class="flex items-start">
+                            <span class="bg-red-100 text-red-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">!</span>
+                            <div>
+                                <h4 class="font-semibold text-gray-700">CoQ10</h4>
+                                <p class="text-gray-600">May interact with blood thinners (e.g., Warfarin) and blood pressure medications.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="bg-red-100 text-red-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">!</span>
+                           <div>
+                                <h4 class="font-semibold text-gray-700">Curcumin & Resveratrol</h4>
+                                <p class="text-gray-600">Can influence liver enzymes that metabolize many common drugs (e.g., antidepressants, anticoagulants).</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                           <span class="bg-red-100 text-red-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">!</span>
+                            <div>
+                                <h4 class="font-semibold text-gray-700">Vitamin D</h4>
+                                <p class="text-gray-600">Can interact with statins. High doses with certain diuretics can cause high blood calcium.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                             <span class="bg-red-100 text-red-800 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">!</span>
+                            <div>
+                                <h4 class="font-semibold text-gray-700">Zinc</h4>
+                                <p class="text-gray-600">High-dose, long-term use can interfere with copper absorption, leading to a deficiency. Do not exceed 40mg/day without medical supervision.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stack Builder Section -->
+        <section id="stack-builder" class="scroll-mt-24">
+            <div class="bg-blue-50 border-2 border-dashed border-blue-200 p-6 md:p-8 rounded-xl">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2 text-center">Your Personalized Stack</h2>
+                <p class="text-lg text-gray-600 mb-8 text-center">As you add supplements from the sections above, they will appear here. This list is your personalized takeaway. Remember to discuss this list with your healthcare provider.</p>
+                <div id="stack-list-container" class="bg-white max-w-2xl mx-auto p-6 rounded-lg shadow">
+                    <ul id="stack-list" class="space-y-3">
+                        <p id="stack-placeholder" class="text-gray-500 text-center italic">Your stack is currently empty. Click "Add to My Stack" on any supplement to begin.</p>
+                    </ul>
+                </div>
+                <div class="text-center mt-6">
+                    <button id="clear-stack-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 hidden">Clear Stack</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-16 border-t">
+        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-gray-500">
+            <p>&copy; 2025 Interactive Longevity Guide. Information is for educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const supplementsData = {
+                foundational: [
+                    {
+                        id: 'nmn_nr',
+                        name: 'NAD+ Precursors (NMN/NR)',
+                        summary: 'Boosts cellular energy and repair by replenishing NAD+, a vital coenzyme that declines with age.',
+                        mechanism: 'NMN and NR are converted by the body into NAD+, which is essential for mitochondrial function, energy metabolism, and activating sirtuins (longevity proteins). This helps repair DNA and maintain cellular health.',
+                        dosage: 'NMN: 600-900 mg/day. NR: up to 1000 mg/day. Studies show 600mg NMN is highly effective for improving physical performance.',
+                        findings: 'Human trials show significant increases in blood NAD+ levels. NMN (600mg/day) improved walking distance and prevented an increase in biological age over 60 days. NR has shown benefits for cerebral metabolism.',
+                        bioavailability: 'Generally well-absorbed orally.',
+                        chartData: {
+                            labels: ['Effective NMN Dose', 'Well-Tolerated NMN', 'Typical NR Dose'],
+                            data: [600, 900, 1000]
+                        }
+                    },
+                    {
+                        id: 'coq10',
+                        name: 'Coenzyme Q10 (CoQ10)',
+                        summary: 'A crucial antioxidant for cellular energy production, especially in the heart and muscles.',
+                        mechanism: 'CoQ10 is a key component in the mitochondrial electron transport chain, which generates ATP (cellular energy). It also protects cells from oxidative damage. Levels decline with age.',
+                        dosage: 'Ubiquinol: 30-100 mg/day. Ubiquinone: 60-200 mg/day. For statin users, 200-400 mg/day may be beneficial.',
+                        findings: 'Linked to improved physical performance and reduced cardiovascular mortality, especially when combined with selenium. Often used to alleviate statin-associated muscle pain.',
+                        bioavailability: '⚡ Ubiquinol form is 3-4x better absorbed than ubiquinone. Take with a fatty meal for best results. Oil-based softgels are superior.',
+                    },
+                    {
+                        id: 'omega3',
+                        name: 'Omega-3 (EPA & DHA)',
+                        summary: 'Essential fatty acids that reduce inflammation and support brain and cardiovascular health.',
+                        mechanism: 'Omega-3s are integral components of cell membranes. They have strong anti-inflammatory properties and are vital for cognitive function. They can also influence gene expression related to aging.',
+                        dosage: '1 gram (1000 mg) per day of combined EPA and DHA.',
+                        findings: 'A 1 gram/day dose was shown in the large DO-HEALTH trial to have a protective effect on slowing biological aging over 3 years, as measured by DNA methylation clocks.',
+                        bioavailability: 'Best sourced from marine oils (fish oil, krill oil) as the body does not efficiently convert plant-based ALA.',
+                    },
+                     {
+                        id: 'curcumin',
+                        name: 'Curcumin',
+                        summary: 'A potent anti-inflammatory and antioxidant compound derived from turmeric.',
+                        mechanism: 'Curcumin modulates key cellular pathways involved in inflammation (like NF-κB) and cellular senescence. It helps reduce oxidative stress throughout the body.',
+                        dosage: 'Typical doses average around 645 mg/day, but effectiveness depends entirely on the formulation.',
+                        findings: 'Shown to significantly increase total antioxidant capacity. Its main challenge is poor absorption.',
+                        bioavailability: '⚡ Extremely poor bioavailability on its own. Must be combined with an enhancer like Piperine (from black pepper), which can boost absorption by up to 2000%.',
+                    },
+                     {
+                        id: 'spermidine',
+                        name: 'Spermidine',
+                        summary: 'A natural compound that promotes cellular cleanup and renewal through autophagy.',
+                        mechanism: 'Spermidine is a potent inducer of autophagy, the process where cells remove and recycle damaged components. This is critical for maintaining cellular function and healthy aging.',
+                        dosage: 'Highly variable. 1.2 mg/day from plant extracts or up to 40 mg/day of high-purity forms have been used in trials.',
+                        findings: 'Epidemiological studies link higher intake to reduced mortality. Human trials show it is safe and well-tolerated, but longer-term studies on cognitive and other benefits are ongoing.',
+                        bioavailability: 'Pay close attention to the product form (extract vs. purified) as this greatly affects the required dosage.',
+                    },
+                    {
+                        id: 'fisetin',
+                        name: 'Fisetin (Senolytic)',
+                        summary: 'A flavonoid that may help clear out old, dysfunctional "zombie" cells (senescent cells).',
+                        mechanism: 'As a senolytic, Fisetin is designed to selectively induce apoptosis (programmed cell death) in senescent cells, which accumulate with age and contribute to chronic inflammation and age-related diseases.',
+                        dosage: 'Human data is very preliminary. One pilot study used 500 mg/day for one week per month.',
+                        findings: 'Strong results in animal studies, showing lifespan extension. Human evidence is currently mixed and very limited. Not yet broadly recommended until more research is done.',
+                        bioavailability: 'Specialized formulations can significantly enhance bioavailability. Standard fisetin is not well-absorbed.',
+                    },
+                    {
+                        id: 'pterostilbene',
+                        name: 'Pterostilbene',
+                        summary: 'A compound similar to resveratrol but with superior bioavailability for better antioxidant effects.',
+                        mechanism: 'Like resveratrol, pterostilbene is a stilbene that activates sirtuins (longevity proteins) and has antioxidant and anti-inflammatory properties. Its chemical structure allows for better absorption and a longer half-life in the body.',
+                        dosage: 'Up to 250 mg/day has been safely used in clinical trials.',
+                        findings: 'Considered a more potent alternative to resveratrol due to better absorption. Shows promise in protecting skin from UV damage. Human longevity studies are still needed.',
+                        bioavailability: '⚡ Naturally more bioavailable than its cousin, resveratrol.',
+                    },
+                    {
+                        id: 'collagen',
+                        name: 'Collagen',
+                        summary: 'A structural protein for improving skin elasticity and supporting joint health.',
+                        mechanism: 'As the body\'s most abundant protein, collagen provides structure to skin, bones, and connective tissues. Supplementation with hydrolyzed collagen provides peptides that the body uses to build new collagen and elastin fibers.',
+                        dosage: '2.5 to 10 grams per day of hydrolyzed collagen.',
+                        findings: 'Multiple studies show significant improvements in skin elasticity, hydration, and wrinkle depth. Also shown to improve osteoarthritis symptoms and reduce exercise-induced knee pain.',
+                        bioavailability: '🔗 Pair with Vitamin C. Vitamin C is an essential cofactor for your body\'s natural collagen synthesis process, boosting the supplement\'s effectiveness.',
+                    },
+                    {
+                        id: 'vitamind',
+                        name: 'Vitamin D',
+                        summary: 'Crucial for bone health, immune function, and muscle strength.',
+                        mechanism: 'A fat-soluble vitamin essential for calcium absorption. It also plays a key role in regulating the immune system, muscle function, and inflammatory pathways. Skin production declines with age.',
+                        dosage: '2000-6000 IU/day of D3 is often recommended for optimal health, aiming for serum levels of 40-70 ng/mL. Regular blood tests are advised.',
+                        findings: 'Combined with omega-3 and exercise, 2000 IU/day showed additive benefits in slowing biological aging. Also helps improve muscle strength in older men, especially when combined with resistance training.',
+                        bioavailability: 'Best taken with a meal containing fat for better absorption.',
+                    }
+                ],
+                mens_health: [
+                    {
+                        id: 'saw_palmetto',
+                        name: 'Saw Palmetto',
+                        summary: 'An herbal remedy primarily used to relieve urinary symptoms of an enlarged prostate (BPH).',
+                        mechanism: 'Works to reduce lower urinary tract symptoms (LUTS) like frequent urination, urgency, and weak stream associated with benign prostatic hyperplasia (BPH).',
+                        dosage: '320 mg/day of a standardized extract, often in divided doses.',
+                        findings: 'Clinical trials show effectiveness comparable to some conventional medications for BPH, but with better tolerability. Benefits are enhanced when combined with other prostate-supportive nutrients.',
+                        bioavailability: '🔗 Works well in combination with Beta-sitosterol for enhanced BPH symptom relief.',
+                    },
+                    {
+                        id: 'beta_sitosterol',
+                        name: 'Beta-sitosterol',
+                        summary: 'A plant sterol that effectively improves urinary flow and reduces BPH symptoms.',
+                        mechanism: 'Helps reduce swelling in the prostate, which alleviates urinary symptoms like frequency and urgency. Importantly, it relieves symptoms but does not shrink the prostate itself.',
+                        dosage: '60-130 mg/day, taken in divided doses for BPH support.',
+                        findings: 'Meta-analyses confirm significant improvements in urinary symptom scores, peak urine flow, and reduced residual urine volume in men with BPH.',
+                        bioavailability: 'Generally well-tolerated.',
+                    },
+                    {
+                        id: 'nettle_root',
+                        name: 'Nettle Root',
+                        summary: 'A traditional herb that reduces prostate size and alleviates BPH symptoms.',
+                        mechanism: 'Contains compounds (phytosterols, lignans) that inhibit enzymes and pathways linked to prostate cell growth, helping to suppress prostate metabolism. May also support healthy free testosterone levels.',
+                        dosage: 'Studies have used up to 1200 mg/day (e.g., two 300mg capsules, twice daily).',
+                        findings: 'Clinical trials show nettle root can significantly reduce the International Prostate Symptom Score (IPSS), prostate size, and serum PSA levels in patients with BPH.',
+                        bioavailability: 'Generally well-tolerated with no significant side effects reported in trials.',
+                    },
+                    {
+                        id: 'zinc',
+                        name: 'Zinc',
+                        summary: 'An essential mineral for testosterone production, fertility, and prostate function.',
+                        mechanism: 'Zinc is a critical cofactor for hundreds of enzymes. It plays a direct role in producing testosterone, supports spermatogenesis, and acts as a hormone balancer and antibacterial agent in the male genitourinary system.',
+                        dosage: 'RDA is 11 mg/day for adult men. Do not exceed the Tolerable Upper Intake Level of 40 mg/day.',
+                        findings: 'Zinc deficiency is common, especially in the elderly, and is linked to hypogonadism and impaired fertility. Supplementation can improve immune function and support hormone levels.',
+                        bioavailability: '⚠️ Caution: High-dose, long-term zinc supplementation (above 40mg/day) can cause a copper deficiency. Balance is key.',
+                    },
+                    {
+                        id: 'lycopene',
+                        name: 'Lycopene',
+                        summary: 'A potent antioxidant found in tomatoes, associated with general cellular health.',
+                        mechanism: 'Lycopene is a carotenoid that protects cells from oxidative damage by neutralizing free radicals. It is thought to prevent lipid oxidation and protect DNA.',
+                        dosage: 'Doses in trials vary widely, from 8 mg up to 120 mg per day.',
+                        findings: 'Despite popular belief, robust human trials show insufficient evidence that lycopene prevents prostate cancer. Its general antioxidant properties, however, contribute to overall cellular health.',
+                        bioavailability: 'Best absorbed from cooked tomato products (like sauce) with a little oil.',
+                    }
+                ]
+            };
+            
+            const foundationalContainer = document.getElementById('foundational-supplements-container');
+            const mensHealthContainer = document.getElementById('mens-health-supplements-container');
+            const stackList = document.getElementById('stack-list');
+            const stackPlaceholder = document.getElementById('stack-placeholder');
+            const clearStackBtn = document.getElementById('clear-stack-btn');
+            
+            let myStack = [];
+            let charts = {};
+
+            const createSupplementCard = (supplement, category) => {
+                const card = document.createElement('div');
+                card.className = 'card bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden';
+                card.innerHTML = `
+                    <div class="card-header p-5 cursor-pointer flex justify-between items-center hover:bg-gray-50 transition">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">${supplement.name}</h3>
+                            <p class="text-gray-600 mt-1">${supplement.summary}</p>
+                        </div>
+                        <span class="text-2xl text-gray-400 transform transition-transform duration-300">▼</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="p-5 border-t border-gray-200">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-semibold text-gray-700 mb-2">Mechanism of Action</h4>
+                                    <p class="text-gray-600 text-sm">${supplement.mechanism}</p>
+                                    
+                                    <h4 class="font-semibold text-gray-700 mt-4 mb-2">Key Findings & Research</h4>
+                                    <p class="text-gray-600 text-sm">${supplement.findings}</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-700 mb-2">Dosage & Practical Notes</h4>
+                                    <p class="text-gray-600 text-sm"><strong>Recommended Dose:</strong> ${supplement.dosage}</p>
+                                    ${supplement.bioavailability ? `<p class="text-sm mt-2 bg-blue-100 text-blue-800 p-2 rounded-md">${supplement.bioavailability}</p>` : ''}
+                                    
+                                    ${supplement.chartData ? `<div class="mt-4"><div class="chart-container"><canvas id="chart-${supplement.id}"></canvas></div></div>` : ''}
+                                </div>
+                            </div>
+                            <div class="mt-6 text-right">
+                                <button data-id="${supplement.id}" data-name="${supplement.name}" data-dosage="${supplement.dosage}" class="add-to-stack-btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Add to My Stack</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const header = card.querySelector('.card-header');
+                const arrow = header.querySelector('span');
+                header.addEventListener('click', () => {
+                    card.classList.toggle('open');
+                    arrow.classList.toggle('rotate-180');
+                    if (card.classList.contains('open') && supplement.chartData && !charts[supplement.id]) {
+                       setTimeout(() => createChart(supplement), 50);
+                    }
+                });
+                
+                return card;
+            };
+
+            const createChart = (supplement) => {
+                const ctx = document.getElementById(`chart-${supplement.id}`).getContext('2d');
+                charts[supplement.id] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: supplement.chartData.labels,
+                        datasets: [{
+                            label: 'Dosage (mg)',
+                            data: supplement.chartData.data,
+                            backgroundColor: ['#60A5FA', '#3B82F6', '#1E40AF'],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.parsed.y} mg`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Dosage (mg)'
+                                }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const updateStackView = () => {
+                if (myStack.length === 0) {
+                    stackList.innerHTML = '';
+                    stackList.appendChild(stackPlaceholder);
+                    clearStackBtn.classList.add('hidden');
+                } else {
+                    stackPlaceholder.remove();
+                    stackList.innerHTML = '';
+                    myStack.forEach((item, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center bg-gray-50 p-3 rounded-lg';
+                        li.innerHTML = `
+                            <div>
+                                <span class="font-semibold text-gray-800">${item.name}</span>
+                                <p class="text-sm text-gray-600">Dose info: ${item.dosage.split('.')[0]}.</p>
+                            </div>
+                            <button data-index="${index}" class="remove-from-stack-btn text-red-500 hover:text-red-700 font-semibold text-sm">Remove</button>
+                        `;
+                        stackList.appendChild(li);
+                    });
+                    clearStackBtn.classList.remove('hidden');
+                }
+            };
+            
+            const handleAddToStack = (e) => {
+                if (e.target.classList.contains('add-to-stack-btn')) {
+                    const id = e.target.dataset.id;
+                    if (myStack.some(item => item.id === id)) {
+                       alert('This supplement is already in your stack.');
+                        return;
+                    }
+                    myStack.push({
+                        id: id,
+                        name: e.target.dataset.name,
+                        dosage: e.target.dataset.dosage
+                    });
+                    updateStackView();
+                    
+                    const stackBuilderSection = document.getElementById('stack-builder');
+                    stackBuilderSection.scrollIntoView({ behavior: 'smooth' });
+
+                    stackBuilderSection.classList.add('animate-pulse-bg');
+                    setTimeout(() => {
+                         stackBuilderSection.classList.remove('animate-pulse-bg');
+                    }, 2000);
+                }
+            };
+
+            const handleRemoveFromStack = (e) => {
+                 if (e.target.classList.contains('remove-from-stack-btn')) {
+                    const index = parseInt(e.target.dataset.index, 10);
+                    myStack.splice(index, 1);
+                    updateStackView();
+                 }
+            };
+
+            clearStackBtn.addEventListener('click', () => {
+                myStack = [];
+                updateStackView();
+            });
+
+            supplementsData.foundational.forEach(sup => foundationalContainer.appendChild(createSupplementCard(sup, 'foundational')));
+            supplementsData.mens_health.forEach(sup => mensHealthContainer.appendChild(createSupplementCard(sup, 'mens_health')));
+
+            document.body.addEventListener('click', handleAddToStack);
+            stackList.addEventListener('click', handleRemoveFromStack);
+
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id]');
+            const mobileNav = document.getElementById('mobile-nav');
+
+            const activateNav = (id) => {
+                 navLinks.forEach(link => {
+                    link.classList.toggle('active', link.hash === `#${id}`);
+                });
+                if(mobileNav.value !== `#${id}`){
+                    mobileNav.value = `#${id}`;
+                }
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        activateNav(entry.target.id);
+                    }
+                });
+            }, { rootMargin: "-30% 0px -70% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+
+            mobileNav.addEventListener('change', (e) => {
+                window.location.hash = e.target.value;
+            });
+        });
+
+    </script>
+    <style>
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        @keyframes pulse-bg {
+            0%, 100% { background-color: #EFF6FF; }
+            50% { background-color: #DBEAFE; }
+        }
+        .animate-pulse-bg {
+            animation: pulse-bg 1s ease-in-out;
+        }
+    </style>
+</body>
+</html>
