@@ -485,13 +485,30 @@
             const paragraphs = item.content.split('\n').filter(p => p.trim() !== '');
             const pTags = paragraphs.map(p => `<p class="mb-4 text-slate-700 leading-relaxed text-justify">${t(p.trim())}</p>`).join('');
 
+            // 動態為標題加上天氣 Emoji
+            let headerWithEmoji = item.header;
+            if (headerWithEmoji.includes('暴雨')) {
+                headerWithEmoji += ' ⛈️';
+            } else if (headerWithEmoji.includes('雨')) {
+                headerWithEmoji += ' 🌧️';
+            } else if (headerWithEmoji.includes('晴') || headerWithEmoji.includes('睛')) {
+                // 相容原文中將「晴」誤打成「睛」的狀況
+                headerWithEmoji += ' ☀️';
+            } else if (headerWithEmoji.includes('多雲')) {
+                headerWithEmoji += ' ⛅';
+            } else if (headerWithEmoji.includes('陰')) {
+                headerWithEmoji += ' ☁️';
+            } else if (headerWithEmoji.includes('微風')) {
+                headerWithEmoji += ' 🌬️';
+            }
+
             return `
                 <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-8 hover:shadow-md transition-shadow">
                     <div class="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center">
                         <svg class="w-5 h-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
-                        <h2 class="text-lg font-bold text-slate-800">${t(item.header)}</h2>
+                        <h2 class="text-lg font-bold text-slate-800">${t(headerWithEmoji)}</h2>
                     </div>
                     <div class="p-6 sm:p-8 prose prose-slate max-w-none">
                         ${pTags}
