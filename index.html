@@ -1,1 +1,252 @@
 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诺民医疗中心 - 保健品展示</title>
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #fff;
+        }
+        body {
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        /* 首页产品网格 */
+        #home-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-align: center;
+            padding-bottom: 15px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        .product-title {
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* 产品详情页 */
+        #detail-view {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background-color: #e0e0e0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #ccc;
+        }
+        .detail-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .images-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .images-section img {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .info-section {
+            flex: 2;
+            min-width: 300px;
+        }
+        .info-section h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .detail-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>诺民医疗中心 - 精选保健品展示</h1>
+</header>
+
+<div class="container">
+    <div id="home-view">
+        <div class="product-card" onclick="showDetail('jiuxindan')">
+            <img src="mmexport1774620047508.jpg" alt="日本救心丹" onerror="this.src='https://via.placeholder.com/200x200?text=图片加载失败'">
+            <div class="product-title">永昌囍字牌 日本救心丹</div>
+        </div>
+        </div>
+
+    <div id="detail-view">
+        <div class="back-btn" onclick="showHome()">← 返回产品列表</div>
+        
+        <div id="detail-jiuxindan" class="detail-content" style="display: none;">
+            <div class="images-section">
+                <img src="mmexport1774620047508.jpg" alt="日本救心丹正面" onerror="this.src='https://via.placeholder.com/400x400?text=正面图片'">
+                <img src="mmexport1774620050334.jpg" alt="日本救心丹成分面" onerror="this.src='https://via.placeholder.com/400x400?text=成分面图片'">
+            </div>
+            <div class="info-section">
+                <h2>永昌囍字牌 日本救心丹 (加強配方)</h2>
+                
+                <div class="info-item">
+                    <span class="info-label">主治功效：</span><br>
+                    四肢無力、活血補氣、養心安神、順心通脈、精神疲乏。
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">主要成分：</span><br>
+                    田七 11.25%、人參提取物 7.5%、白柳提取物 7.5%、丹參葉末 11.25%、牛膽汁 6%、珍珠末 5.25%、肉桂 2.25%、輔酶Q10 1.875%、寒梅粉 5.25%、金箔 1%。
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">用法用量：</span><br>
+                    成人每次一粒，每天二次，早晚飯後用溫水送服。
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">储存方法：</span><br>
+                    置於陰涼乾爽處，避免兒童拿取。
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">注意事项：</span><br>
+                    <span style="color: red;">孕婦忌服。</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">产品规格：</span><br>
+                    50粒裝 (日本製造)
+                </div>
+            </div>
+        </div>
+        
+        <div id="detail-blank" class="detail-content" style="display: none;">
+            <div class="images-section">
+                <img src="https://via.placeholder.com/400x400?text=产品正面" alt="空白正面">
+                <img src="https://via.placeholder.com/400x400?text=产品成分面" alt="空白成分面">
+            </div>
+            <div class="info-section">
+                <h2 id="blank-title">待添加产品名称</h2>
+                <div class="info-item"><span class="info-label">主治功效：</span><br>（暂缺）</div>
+                <div class="info-item"><span class="info-label">主要成分：</span><br>（暂缺）</div>
+                <div class="info-item"><span class="info-label">用法用量：</span><br>（暂缺）</div>
+                <div class="info-item"><span class="info-label">注意事项：</span><br>（暂缺）</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // 自动生成剩余的29个空白产品卡片
+    const homeView = document.getElementById('home-view');
+    for (let i = 2; i <= 30; i++) {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.onclick = () => showDetail('blank', `保健品 ${i}`);
+        card.innerHTML = `
+            <img src="https://via.placeholder.com/200x200?text=保健品+${i}" alt="保健品 ${i}">
+            <div class="product-title">保健品 ${i} (待上架)</div>
+        `;
+        homeView.appendChild(card);
+    }
+
+    // 显示详情页
+    function showDetail(productId, title = '') {
+        document.getElementById('home-view').style.display = 'none';
+        document.getElementById('detail-view').style.display = 'block';
+        
+        // 隐藏所有具体内容
+        document.getElementById('detail-jiuxindan').style.display = 'none';
+        document.getElementById('detail-blank').style.display = 'none';
+
+        // 显示被点击的内容
+        if (productId === 'jiuxindan') {
+            document.getElementById('detail-jiuxindan').style.display = 'flex';
+        } else {
+            document.getElementById('detail-blank').style.display = 'flex';
+            document.getElementById('blank-title').innerText = title;
+        }
+        window.scrollTo(0, 0); // 滚动到顶部
+    }
+
+    // 返回主页
+    function showHome() {
+        document.getElementById('detail-view').style.display = 'none';
+        document.getElementById('home-view').style.display = 'grid';
+    }
+</script>
+
+</body>
+</html>
