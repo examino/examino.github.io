@@ -1,285 +1,219 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>諾民醫療中心 - 保健品展示</title>
-  
-  <!-- 引入 Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- 引入 React 和 ReactDOM -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-  <!-- 引入 Babel -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <style>
-    /* 隱藏橫向滾動條，保持美觀 */
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    /* 確保所有點擊區域在手機上沒有高亮陰影 */
-    * { -webkit-tap-highlight-color: transparent; }
-  </style>
-</head>
-<body class="bg-gray-50">
-  
-  <div id="root"></div>
+import React, { useState } from 'react';
+import { 
+  Calendar, MapPin, Car, Wind, Sun, 
+  Utensils, Bed, HeartHandshake, Info, 
+  Coffee, ShieldCheck, ThermometerSnowflake 
+} from 'lucide-react';
 
-  <script type="text/babel">
-    const { useState, useMemo } = React;
+// 行程數據
+const itineraryData = [
+  {
+    day: 1,
+    date: "7月28日 (週二)",
+    title: "抵達南國，嚐鮮美食",
+    level: "極度輕鬆，都在車內或冷氣房",
+    tips: "今天主要是坐車，請放鬆心情，車上冷氣充足。",
+    activities: [
+      { time: "下午 13:50", event: "抵達高雄機場", desc: "晚輩去辦租車，您在入境大廳的冷氣座椅區舒舒服服地休息等待就好。", icon: <Car className="text-blue-500" /> },
+      { time: "下午 15:20", event: "乘車前往恆春", desc: "沿途看風景，我們特別為您安排了不曬太陽的座位（左側），車內恆溫24度。", icon: <MapPin className="text-green-500" /> },
+      { time: "晚上", event: "晚餐：虎炊稻臺菜", desc: "環境漂亮冷氣足！特地點了入口即化的『醉美東坡肉』和軟嫩的『瀑布流沙豆腐』，好吃又不費牙。", icon: <Utensils className="text-orange-500" /> },
+      { time: "夜間", event: "回房休息", desc: "在街邊散步10分鐘消食，早點回飯店睡個好覺。", icon: <Bed className="text-indigo-500" /> }
+    ]
+  },
+  {
+    day: 2,
+    date: "7月29日 (週三)",
+    title: "看海吹風，品嚐海鮮",
+    level: "走路很少，下午都在室內吹冷氣",
+    tips: "中午避開大太陽，下午去喝海景咖啡。",
+    activities: [
+      { time: "上午 09:00", event: "貓鼻頭公園 & 白沙灣", desc: "趁早上不熱，去走走平坦的步道看海。在白沙灣的樹蔭下坐著吹海風，不用下沙灘去人擠人。", icon: <Sun className="text-amber-500" /> },
+      { time: "中午", event: "午餐：阿興生魚片", desc: "餐廳冷氣很強！除了嚐幾塊生魚片，主要為您點了軟嫩的『雨來菇炒蛋』、清蒸鮮魚和養胃的鮮魚湯。", icon: <Utensils className="text-orange-500" /> },
+      { time: "下午 13:00", event: "台電南部展示館 (避暑)", desc: "這是最熱的時候，我們去館裡免費吹最涼的冷氣，可以坐在沙發上吃冰棒休息。", icon: <ThermometerSnowflake className="text-cyan-500" /> },
+      { time: "傍晚 16:00", event: "萬里桐 海龜咖啡", desc: "坐在室內的軟沙發上，喝著咖啡，吃著軟糯的肉桂捲，透過大玻璃窗看絕美的夕陽。", icon: <Coffee className="text-amber-700" /> }
+    ]
+  },
+  {
+    day: 3,
+    date: "7月30日 (週四)",
+    title: "東海岸風光與奇妙海洋館",
+    level: "適度活動，海洋館可借輪椅代步",
+    tips: "早上看燈塔要注意防曬，傍晚看海風大要穿外套。",
+    activities: [
+      { time: "上午 08:30", event: "船帆石 & 鵝鑾鼻燈塔", desc: "車停路邊就能和船帆石合影。鵝鑾鼻步道平緩，我們會備好遮陽傘，累了隨時在樹蔭下休息。", icon: <MapPin className="text-green-500" /> },
+      { time: "中午", event: "午餐：清淡麵食簡餐", desc: "找一家冷氣足、好停車的店，吃碗軟爛的牛肉麵，讓腸胃休息一下。", icon: <Utensils className="text-orange-500" /> },
+      { time: "下午 13:30", event: "海洋生物博物館", desc: "全台灣最大的室內海洋館！我們全程用輪椅推著您走（保護膝蓋），在冷氣房裡輕鬆看企鵝和白鯨。", icon: <HeartHandshake className="text-pink-500" /> },
+      { time: "傍晚 17:15", event: "龍磐公園觀海", desc: "下車走3分鐘就能看到壯麗的太平洋。這裡風大，記得穿上我們為您準備的防風外套喔。", icon: <Wind className="text-teal-500" /> }
+    ]
+  },
+  {
+    day: 4,
+    date: "7月31日 (週五)",
+    title: "古城慢走，舒舒服服睡午覺",
+    level: "極度休閒，下午強制午休",
+    tips: "今天行程極慢，讓身體徹底放鬆。",
+    activities: [
+      { time: "上午 09:30", event: "恆春百年古城", desc: "在不曬太陽的騎樓下慢慢走，去吃恆春特有的軟糯甜品『綠豆蒜』，溫熱微甜，去火又養生。", icon: <Coffee className="text-amber-700" /> },
+      { time: "中午", event: "午餐：一杯咖啡 (南洋風味)", desc: "這家餐廳的咖哩有薑黃素，對關節很好，口味清淡不鹹，雞肉燉得很軟嫩。", icon: <Utensils className="text-orange-500" /> },
+      { time: "下午 13:00", event: "回飯店睡午覺", desc: "連續玩了三天，今天下午啥也不做，回房間躺下好好睡個午覺（可以用枕頭把腿墊高，放鬆靜脈）。", icon: <Bed className="text-indigo-500" /> },
+      { time: "傍晚 16:30", event: "看體力決定去哪", desc: "如果精神好，我們去關山看日落；如果想休息，就去平坦的紅柴坑小漁港看海，順便吃碗鮮魚湯麵。", icon: <Sun className="text-amber-500" /> }
+    ]
+  },
+  {
+    day: 5,
+    date: "8月1日 (週六)",
+    title: "高雄看船，吃港點準備回家",
+    level: "輕鬆返程，全程有冷氣",
+    tips: "不趕時間，平平穩穩地踏上歸途。",
+    activities: [
+      { time: "上午 09:30", event: "睡飽退房，坐車北上", desc: "吃完早餐我們出發去高雄，上午開車能避開下午的雷陣雨，更加安全。", icon: <Car className="text-blue-500" /> },
+      { time: "中午 12:00", event: "高雄港旅運中心", desc: "坐電梯直達3樓觀景台，不用爬樓梯，全家在微風中看著大郵輪拍張合影。", icon: <MapPin className="text-green-500" /> },
+      { time: "下午 13:15", event: "SKM Park 吹冷氣吃添好運", desc: "去離機場很近的商場。午餐吃著名的添好運港點：薄皮蝦餃、清湯雲吞、入口即化的陳皮牛肉球，再喝杯薏米水。", icon: <Utensils className="text-orange-500" /> },
+      { time: "下午 17:00", event: "抵達機場準備回家", desc: "慢慢辦理登機手續，在機場冷氣房裡休息，圓滿結束這趟快樂的旅行！", icon: <ShieldCheck className="text-emerald-500" /> }
+    ]
+  }
+];
 
-    // --- 圖標組件 ---
-    const GlobeIcon = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-    );
-    const ArrowLeftIcon = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-    );
-    const PillIcon = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
-    );
-    const BabyIcon = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1-1.9 2.2V14c0 1.1-.9 2-2 2h-1"/><path d="M15 16v3c0 1.1-.9 2-2 2h-2c-1.1 0-2-.9-2-2v-3"/><path d="M7 16H6c-1.1 0-2-.9-2-2v-1.6a2 2 0 0 1-1.9-2.2A9 9 0 0 1 15 2"/><path d="M15 2c-3.1 3-5 5.5-5 8"/><path d="M10 2c3.1 3 5 5.5 5 8"/></svg>
-    );
-    const LeafIcon = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 22l10-10"/></svg>
-    );
-    const ImageIconSvg = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-    );
-    const SearchIcon = ({ size=24, className="" }) => (
-      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    );
+export default function App() {
+  const [selectedDay, setSelectedDay] = useState(1);
 
-    // --- 多語言字典 ---
-    const translations = {
-      tc: {
-        clinicName: '諾民醫療中心', subtitle: '專業保健品展示', langSwitch: '簡體中文',
-        home: '首頁', adult: '成人保健', child: '兒童保健', tcm: '中醫藥', all: '全部產品',
-        viewDetails: '查看詳情', frontImage: '產品正面', ingredientImage: '成分說明',
-        description: '產品描述', usage: '用法與注意事項', placeholderDesc: '這是產品的詳細描述。請在此處填寫產品的功效、適用人群等資訊。',
-        placeholderUsage: '用法用量：每日X次，每次X粒。\n儲存方法：置於陰涼乾燥處。\n注意事項：孕婦及兒童請遵醫囑。',
-        searchPlaceholder: '搜尋產品...', noProducts: '找不到相關產品',
-      },
-      sc: {
-        clinicName: '诺民医疗中心', subtitle: '专业保健品展示', langSwitch: '繁体中文',
-        home: '首页', adult: '成人保健', child: '儿童保健', tcm: '中医药', all: '全部产品',
-        viewDetails: '查看详情', frontImage: '产品正面', ingredientImage: '成分说明',
-        description: '产品描述', usage: '用法与注意事项', placeholderDesc: '这是产品的详细描述。请在此处填写产品的功效、适用人群等信息。',
-        placeholderUsage: '用法用量：每日X次，每次X粒。\n储存方法：置于阴凉干燥处。\n注意事项：孕妇及儿童请遵医嘱。',
-        searchPlaceholder: '搜索产品...', noProducts: '找不到相关产品',
-      }
-    };
+  return (
+    <div className="min-h-screen bg-orange-50 font-sans text-gray-800 pb-12">
+      {/* 頭部歡迎區 */}
+      <header className="bg-white shadow-sm pt-12 pb-8 px-4 text-center border-b-4 border-orange-200">
+        <h1 className="text-3xl md:text-4xl font-bold text-orange-800 mb-4 tracking-wide">
+          🌴 2026 台灣南部五天四夜輕鬆遊
+        </h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          親愛的爸爸媽媽（爺爺奶奶），這是為您們量身訂製的專屬行程。<br/>
+          <strong className="text-orange-700">原則就是：不累、不曬、吃得軟、冷氣足！</strong>
+        </p>
+      </header>
 
-    // --- 數據生成函數 ---
-    const generateProducts = () => {
-      const products = [];
-      products.push({
-        id: 'tcm-1', category: 'tcm',
-        name: { tc: '日本救心丹 (永昌禧字牌)', sc: '日本救心丹 (永昌禧字牌)' },
-        images: { front: '中医药_产品1_正面.jpg', back: '中医药_产品1_成分.jpg' },
-        shortDesc: { tc: '各種心臟的妙心丹，特選金粒，和漢煉成。加強配方。', sc: '各种心脏的妙心丹，特选金粒，和汉炼成。加强配方。' },
-        description: { tc: '【主治功效】四肢無力、活血補氣、養心安神、順心通脈、精神疲乏。\n\n【主要成分】田七 11.25%、人參提取物(オタネニンジン抽出物) 7.5%、白柳提取物(西洋シロヤナギ抽出物) 7.5%、丹參葉末 11.25%、牛膽汁(うし胆汁) 6%、珍珠末(真珠末) 5.25%、肉桂(ケイヒ末) 2.25%、輔酶Q10(コエンザイムQ10) 1.875%、寒梅粉 5.25%、金箔 1%。', sc: '【主治功效】四肢无力、活血补气、养心安神、顺心通脉、精神疲乏。\n\n【主要成分】田七 11.25%、人参提取物 7.5%、白柳提取物 7.5%、丹参叶末 11.25%、牛胆汁 6%、珍珠末 5.25%、肉桂 2.25%、辅酶Q10 1.875%、寒梅粉 5.25%、金箔 1%。' },
-        usage: { tc: '用法：成人每次一粒，每天二次，早晚飯後用溫水送服。\n儲存：置於陰涼乾爽處，避免兒童拿取。\n注意：孕婦忌服。\n規格：50粒裝。', sc: '用法：成人每次一粒，每天二次，早晚饭后用温水送服。\n储存：置于阴凉干爽处，避免儿童拿取。\n注意：孕妇忌服。\n规格：50粒装。' }
-      });
-      for (let i = 2; i <= 20; i++) { products.push({ id: `tcm-${i}`, category: 'tcm', name: { tc: `傳統中藥保健品 ${i}`, sc: `传统中药保健品 ${i}` }, images: { front: null, back: null }, shortDesc: { tc: '精選草本，傳統配方。', sc: '精选草本，传统配方。' } }); }
-      for (let i = 1; i <= 20; i++) { products.push({ id: `adult-${i}`, category: 'adult', name: { tc: `成人綜合維他命/保健品 ${i}`, sc: `成人综合维生素/保健品 ${i}` }, images: { front: null, back: null }, shortDesc: { tc: '每日必備，補充成人所需營養。', sc: '每日必备，补充成人所需营养。' } }); }
-      for (let i = 1; i <= 20; i++) { products.push({ id: `child-${i}`, category: 'child', name: { tc: `兒童成長營養素 ${i}`, sc: `儿童成长营养素 ${i}` }, images: { front: null, back: null }, shortDesc: { tc: '幫助兒童健康發育，增強免疫力。', sc: '帮助儿童健康发育，增强免疫力。' } }); }
-      return products;
-    };
-
-    const allProducts = generateProducts();
-
-    function App() {
-      const [lang, setLang] = useState('tc');
-      const [activeCategory, setActiveCategory] = useState('all');
-      const [selectedProduct, setSelectedProduct] = useState(null);
-      const [searchTerm, setSearchTerm] = useState('');
-
-      const t = (key) => translations[lang][key];
-      const toggleLang = () => setLang(lang === 'tc' ? 'sc' : 'tc');
-
-      const categories = [
-        { id: 'all', name: t('all'), icon: null },
-        { id: 'adult', name: t('adult'), icon: <PillIcon size={16} className="mr-1.5" /> },
-        { id: 'child', name: t('child'), icon: <BabyIcon size={16} className="mr-1.5" /> },
-        { id: 'tcm', name: t('tcm'), icon: <LeafIcon size={16} className="mr-1.5" /> },
-      ];
-
-      const filteredProducts = useMemo(() => {
-        return allProducts.filter(p => {
-          const matchCategory = activeCategory === 'all' || p.category === activeCategory;
-          const matchSearch = p.name[lang].toLowerCase().includes(searchTerm.toLowerCase());
-          return matchCategory && matchSearch;
-        });
-      }, [activeCategory, searchTerm, lang]);
-
-      const ProductCard = ({ product }) => (
-        <div 
-          className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer flex flex-col h-full group"
-          onClick={() => setSelectedProduct(product)}
-        >
-          <div className="aspect-square bg-gray-50 flex items-center justify-center p-2 sm:p-4 relative overflow-hidden">
-            {product.images.front ? (
-              <img 
-                src={product.images.front} 
-                alt={product.name[lang]} 
-                className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-300"
-                onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/400x400/e2e8f0/64748b?text=Image+Not+Found'; }}
-              />
-            ) : (
-              <div className="text-gray-400 flex flex-col items-center">
-                <ImageIconSvg size={36} className="mb-2 opacity-50" />
-                <span className="text-xs sm:text-sm">圖片準備中</span>
-              </div>
-            )}
-            <div className="absolute top-2 right-2 bg-blue-50 text-blue-600 text-[10px] sm:text-xs px-2 py-1 rounded-full font-medium">
-              {categories.find(c => c.id === product.category)?.name}
-            </div>
+      {/* 貼心提醒卡片 */}
+      <section className="max-w-4xl mx-auto mt-8 px-4">
+        <div className="bg-blue-50 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row items-center gap-6">
+          <div className="bg-blue-100 p-4 rounded-full">
+            <Info className="w-10 h-10 text-blue-600" />
           </div>
-          <div className="p-4 sm:p-5 flex flex-col flex-grow">
-            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-1.5 line-clamp-2 leading-tight">{product.name[lang]}</h3>
-            <p className="text-gray-500 text-xs sm:text-sm mb-4 line-clamp-2 flex-grow">{product.shortDesc[lang]}</p>
-            <button className="w-full py-2 bg-blue-50 hover:bg-blue-600 hover:text-white text-blue-600 font-medium rounded-lg transition-colors text-xs sm:text-sm">
-              {t('viewDetails')}
-            </button>
+          <div>
+            <h2 className="text-2xl font-bold text-blue-800 mb-2">出遊貼心小約定</h2>
+            <ul className="text-lg text-gray-700 space-y-2">
+              <li>💧 <strong>多喝水：</strong> 我們每45分鐘會把水遞給您，不渴也要喝幾口喔！</li>
+              <li>🧥 <strong>備外套：</strong> 進出車子和冷氣房溫差大，請隨時披上薄外套防感冒。</li>
+              <li>🪑 <strong>隨時坐：</strong> 行程極度寬鬆，如果覺得累，告訴我們，隨時都能停下休息。</li>
+            </ul>
           </div>
         </div>
-      );
+      </section>
 
-      const ProductDetail = ({ product }) => {
-        const [activeImage, setActiveImage] = useState('front');
-        const desc = product.description?.[lang] || t('placeholderDesc');
-        const usage = product.usage?.[lang] || t('placeholderUsage');
-
-        return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 max-w-5xl mx-auto">
-            <button onClick={() => setSelectedProduct(null)} className="flex items-center text-blue-600 hover:text-blue-800 mb-4 sm:mb-6 font-medium transition-colors text-sm sm:text-base">
-              <ArrowLeftIcon size={18} className="mr-1.5" /> 返回列表
+      {/* 行程導航 */}
+      <section className="max-w-4xl mx-auto mt-10 px-4">
+        <div className="flex overflow-x-auto pb-4 gap-3 snap-x hide-scrollbar justify-start md:justify-center">
+          {itineraryData.map((data) => (
+            <button
+              key={data.day}
+              onClick={() => setSelectedDay(data.day)}
+              className={`snap-center flex-shrink-0 px-6 py-3 rounded-full text-lg font-bold transition-all duration-300 ${
+                selectedDay === data.day
+                  ? 'bg-orange-500 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-gray-600 shadow border border-gray-200 hover:bg-orange-100'
+              }`}
+            >
+              第 {data.day} 天
             </button>
+          ))}
+        </div>
+      </section>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                {/* 左側圖片區 - 調整了手機端的內邊距 */}
-                <div className="p-5 sm:p-8 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-100">
-                  <div className="aspect-[4/5] bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center p-2 sm:p-4 mb-4 overflow-hidden">
-                    {product.images[activeImage] ? (
-                       <img 
-                         src={product.images[activeImage]} 
-                         alt={`${product.name[lang]} - ${activeImage === 'front' ? '正面' : '成分'}`}
-                         className="object-contain w-full h-full"
-                         onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x800/e2e8f0/64748b?text=Image+Not+Found'; }}
-                       />
-                    ) : (
-                      <div className="text-gray-400 flex flex-col items-center">
-                        <ImageIconSvg size={48} className="mb-3 opacity-30" />
-                        <span className="text-gray-500 text-sm font-medium">{activeImage === 'front' ? t('frontImage') : t('ingredientImage')} 暫缺</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <button onClick={() => setActiveImage('front')} className={`py-2 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all ${activeImage === 'front' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>{t('frontImage')}</button>
-                    <button onClick={() => setActiveImage('back')} className={`py-2 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all ${activeImage === 'back' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`}>{t('ingredientImage')}</button>
-                  </div>
+      {/* 選中行程詳情 */}
+      <section className="max-w-4xl mx-auto mt-6 px-4">
+        {itineraryData.map((data) => (
+          <div
+            key={data.day}
+            className={`transition-all duration-500 ${
+              selectedDay === data.day ? 'block animate-fade-in' : 'hidden'
+            }`}
+          >
+            <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-orange-100">
+              {/* 卡片頭部 */}
+              <div className="bg-gradient-to-r from-orange-400 to-amber-500 p-6 text-white">
+                <div className="flex items-center gap-2 mb-2 opacity-90 text-lg">
+                  <Calendar className="w-5 h-5" />
+                  <span>{data.date}</span>
                 </div>
+                <h2 className="text-3xl font-bold mb-4">{data.title}</h2>
+                <div className="flex flex-wrap gap-3">
+                  <span className="bg-white/20 px-4 py-1.5 rounded-full text-lg backdrop-blur-sm flex items-center gap-2">
+                    <HeartHandshake className="w-5 h-5" /> {data.level}
+                  </span>
+                </div>
+              </div>
 
-                {/* 右側文字區 - 調整了手機端的內邊距和字體大小 */}
-                <div className="p-5 sm:p-8 md:p-10 flex flex-col">
-                  <div className="inline-block px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full text-[10px] sm:text-xs font-bold tracking-wider mb-3 w-max">
-                    {categories.find(c => c.id === product.category)?.name}
-                  </div>
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-5 leading-tight">{product.name[lang]}</h1>
-                  <div className="space-y-6 sm:space-y-8 flex-grow">
-                    <div>
-                      <h3 className="text-base sm:text-lg font-bold text-gray-800 border-b-2 border-blue-100 pb-1.5 mb-2.5 inline-block">{t('description')}</h3>
-                      <p className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base">{desc}</p>
-                    </div>
-                    <div>
-                      <h3 className="text-base sm:text-lg font-bold text-gray-800 border-b-2 border-blue-100 pb-1.5 mb-2.5 inline-block">{t('usage')}</h3>
-                      <div className="bg-yellow-50 rounded-xl p-4 sm:p-5 border border-yellow-100">
-                        <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm md:text-base font-medium">{usage}</p>
+              {/* 每日提醒 */}
+              <div className="bg-yellow-50 p-4 border-b border-yellow-100 flex items-start gap-3">
+                <ShieldCheck className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <p className="text-lg text-yellow-800 font-medium">{data.tips}</p>
+              </div>
+
+              {/* 時間線 */}
+              <div className="p-6 md:p-8">
+                <div className="space-y-8">
+                  {data.activities.map((activity, index) => (
+                    <div key={index} className="flex gap-4 md:gap-6">
+                      {/* 圖標與連接線 */}
+                      <div className="flex flex-col items-center">
+                        <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center border-2 border-orange-100 z-10 shadow-sm">
+                          {activity.icon}
+                        </div>
+                        {index !== data.activities.length - 1 && (
+                          <div className="w-1 h-full bg-orange-100 mt-2 rounded-full"></div>
+                        )}
+                      </div>
+                      
+                      {/* 內容 */}
+                      <div className="pb-2">
+                        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm font-bold mb-2">
+                          {activity.time}
+                        </span>
+                        <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                          {activity.event}
+                        </h3>
+                        <p className="text-xl text-gray-600 leading-relaxed">
+                          {activity.desc}
+                        </p>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
-        );
-      };
+        ))}
+      </section>
 
-      return (
-        <div className="min-h-screen font-sans text-gray-900 selection:bg-blue-200">
-          
-          {/* 優化後的 Header：取消固定高度，支援彈性換行，縮小移動端字體 */}
-          <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center min-h-[4rem] py-3 gap-3">
-                <div className="flex flex-col cursor-pointer shrink" onClick={() => { setSelectedProduct(null); setActiveCategory('all'); }}>
-                  <h1 className="text-xl sm:text-2xl font-black text-blue-700 tracking-tight leading-tight">{t('clinicName')}</h1>
-                  <span className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-widest mt-0.5">{t('subtitle')}</span>
-                </div>
-                
-                {/* 限制按鈕不換行 (whitespace-nowrap)，並縮小移動端內邊距 */}
-                <button onClick={toggleLang} className="shrink-0 flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm font-medium text-gray-600 hover:text-blue-600 bg-gray-100 hover:bg-blue-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full transition-colors whitespace-nowrap">
-                  <GlobeIcon size={14} className="sm:w-4 sm:h-4" />
-                  <span>{t('langSwitch')}</span>
-                </button>
-              </div>
-            </div>
-          </header>
+      {/* 底部保障 */}
+      <footer className="max-w-4xl mx-auto mt-12 px-4 text-center text-gray-500">
+        <p className="text-lg">💖 全程配有完善的醫療應急預案與藥品，隨時護航您的健康與安全。</p>
+      </footer>
 
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
-            {selectedProduct ? (
-              <ProductDetail product={selectedProduct} />
-            ) : (
-              <div className="space-y-6 sm:space-y-8">
-                
-                {/* 搜尋與分類列：優化手機端間距 */}
-                <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="flex overflow-x-auto hide-scrollbar w-full md:w-auto gap-2 pb-1 md:pb-0">
-                    {categories.map((cat) => (
-                      <button key={cat.id} onClick={() => setActiveCategory(cat.id)} className={`whitespace-nowrap flex items-center px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl font-medium text-xs sm:text-sm transition-all ${activeCategory === cat.id ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}>
-                        {cat.icon}
-                        {cat.name}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="relative w-full md:w-72 mt-1 md:mt-0">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                      <SearchIcon size={16} />
-                    </div>
-                    <input type="text" placeholder={t('searchPlaceholder')} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-9 pr-4 py-2 sm:py-2.5 bg-gray-50 border border-transparent focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl outline-none transition-all text-xs sm:text-sm" />
-                  </div>
-                </div>
-
-                {filteredProducts.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-                    {filteredProducts.map(product => <ProductCard key={product.id} product={product} />)}
-                  </div>
-                ) : (
-                  <div className="text-center py-16 sm:py-20 bg-white rounded-2xl border border-gray-100">
-                    <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-100 mb-3 sm:mb-4">
-                      <SearchIcon size={20} className="text-gray-400 sm:w-6 sm:h-6" />
-                    </div>
-                    <h3 className="text-base sm:text-lg font-medium text-gray-900">{t('noProducts')}</h3>
-                  </div>
-                )}
-              </div>
-            )}
-          </main>
-          
-          <footer className="bg-white border-t border-gray-200 mt-8 sm:mt-12 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
-            <p>© {new Date().getFullYear()} {t('clinicName')}. All rights reserved.</p>
-          </footer>
-        </div>
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+      {/* 簡單的內聯動畫樣式 */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.4s ease-out forwards;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}} />
+    </div>
+  );
+}
