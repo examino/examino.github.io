@@ -1,219 +1,237 @@
-import React, { useState } from 'react';
-import { 
-  Calendar, MapPin, Car, Wind, Sun, 
-  Utensils, Bed, HeartHandshake, Info, 
-  Coffee, ShieldCheck, ThermometerSnowflake 
-} from 'lucide-react';
-
-// 行程數據
-const itineraryData = [
-  {
-    day: 1,
-    date: "7月28日 (週二)",
-    title: "抵達南國，嚐鮮美食",
-    level: "極度輕鬆，都在車內或冷氣房",
-    tips: "今天主要是坐車，請放鬆心情，車上冷氣充足。",
-    activities: [
-      { time: "下午 13:50", event: "抵達高雄機場", desc: "晚輩去辦租車，您在入境大廳的冷氣座椅區舒舒服服地休息等待就好。", icon: <Car className="text-blue-500" /> },
-      { time: "下午 15:20", event: "乘車前往恆春", desc: "沿途看風景，我們特別為您安排了不曬太陽的座位（左側），車內恆溫24度。", icon: <MapPin className="text-green-500" /> },
-      { time: "晚上", event: "晚餐：虎炊稻臺菜", desc: "環境漂亮冷氣足！特地點了入口即化的『醉美東坡肉』和軟嫩的『瀑布流沙豆腐』，好吃又不費牙。", icon: <Utensils className="text-orange-500" /> },
-      { time: "夜間", event: "回房休息", desc: "在街邊散步10分鐘消食，早點回飯店睡個好覺。", icon: <Bed className="text-indigo-500" /> }
-    ]
-  },
-  {
-    day: 2,
-    date: "7月29日 (週三)",
-    title: "看海吹風，品嚐海鮮",
-    level: "走路很少，下午都在室內吹冷氣",
-    tips: "中午避開大太陽，下午去喝海景咖啡。",
-    activities: [
-      { time: "上午 09:00", event: "貓鼻頭公園 & 白沙灣", desc: "趁早上不熱，去走走平坦的步道看海。在白沙灣的樹蔭下坐著吹海風，不用下沙灘去人擠人。", icon: <Sun className="text-amber-500" /> },
-      { time: "中午", event: "午餐：阿興生魚片", desc: "餐廳冷氣很強！除了嚐幾塊生魚片，主要為您點了軟嫩的『雨來菇炒蛋』、清蒸鮮魚和養胃的鮮魚湯。", icon: <Utensils className="text-orange-500" /> },
-      { time: "下午 13:00", event: "台電南部展示館 (避暑)", desc: "這是最熱的時候，我們去館裡免費吹最涼的冷氣，可以坐在沙發上吃冰棒休息。", icon: <ThermometerSnowflake className="text-cyan-500" /> },
-      { time: "傍晚 16:00", event: "萬里桐 海龜咖啡", desc: "坐在室內的軟沙發上，喝著咖啡，吃著軟糯的肉桂捲，透過大玻璃窗看絕美的夕陽。", icon: <Coffee className="text-amber-700" /> }
-    ]
-  },
-  {
-    day: 3,
-    date: "7月30日 (週四)",
-    title: "東海岸風光與奇妙海洋館",
-    level: "適度活動，海洋館可借輪椅代步",
-    tips: "早上看燈塔要注意防曬，傍晚看海風大要穿外套。",
-    activities: [
-      { time: "上午 08:30", event: "船帆石 & 鵝鑾鼻燈塔", desc: "車停路邊就能和船帆石合影。鵝鑾鼻步道平緩，我們會備好遮陽傘，累了隨時在樹蔭下休息。", icon: <MapPin className="text-green-500" /> },
-      { time: "中午", event: "午餐：清淡麵食簡餐", desc: "找一家冷氣足、好停車的店，吃碗軟爛的牛肉麵，讓腸胃休息一下。", icon: <Utensils className="text-orange-500" /> },
-      { time: "下午 13:30", event: "海洋生物博物館", desc: "全台灣最大的室內海洋館！我們全程用輪椅推著您走（保護膝蓋），在冷氣房裡輕鬆看企鵝和白鯨。", icon: <HeartHandshake className="text-pink-500" /> },
-      { time: "傍晚 17:15", event: "龍磐公園觀海", desc: "下車走3分鐘就能看到壯麗的太平洋。這裡風大，記得穿上我們為您準備的防風外套喔。", icon: <Wind className="text-teal-500" /> }
-    ]
-  },
-  {
-    day: 4,
-    date: "7月31日 (週五)",
-    title: "古城慢走，舒舒服服睡午覺",
-    level: "極度休閒，下午強制午休",
-    tips: "今天行程極慢，讓身體徹底放鬆。",
-    activities: [
-      { time: "上午 09:30", event: "恆春百年古城", desc: "在不曬太陽的騎樓下慢慢走，去吃恆春特有的軟糯甜品『綠豆蒜』，溫熱微甜，去火又養生。", icon: <Coffee className="text-amber-700" /> },
-      { time: "中午", event: "午餐：一杯咖啡 (南洋風味)", desc: "這家餐廳的咖哩有薑黃素，對關節很好，口味清淡不鹹，雞肉燉得很軟嫩。", icon: <Utensils className="text-orange-500" /> },
-      { time: "下午 13:00", event: "回飯店睡午覺", desc: "連續玩了三天，今天下午啥也不做，回房間躺下好好睡個午覺（可以用枕頭把腿墊高，放鬆靜脈）。", icon: <Bed className="text-indigo-500" /> },
-      { time: "傍晚 16:30", event: "看體力決定去哪", desc: "如果精神好，我們去關山看日落；如果想休息，就去平坦的紅柴坑小漁港看海，順便吃碗鮮魚湯麵。", icon: <Sun className="text-amber-500" /> }
-    ]
-  },
-  {
-    day: 5,
-    date: "8月1日 (週六)",
-    title: "高雄看船，吃港點準備回家",
-    level: "輕鬆返程，全程有冷氣",
-    tips: "不趕時間，平平穩穩地踏上歸途。",
-    activities: [
-      { time: "上午 09:30", event: "睡飽退房，坐車北上", desc: "吃完早餐我們出發去高雄，上午開車能避開下午的雷陣雨，更加安全。", icon: <Car className="text-blue-500" /> },
-      { time: "中午 12:00", event: "高雄港旅運中心", desc: "坐電梯直達3樓觀景台，不用爬樓梯，全家在微風中看著大郵輪拍張合影。", icon: <MapPin className="text-green-500" /> },
-      { time: "下午 13:15", event: "SKM Park 吹冷氣吃添好運", desc: "去離機場很近的商場。午餐吃著名的添好運港點：薄皮蝦餃、清湯雲吞、入口即化的陳皮牛肉球，再喝杯薏米水。", icon: <Utensils className="text-orange-500" /> },
-      { time: "下午 17:00", event: "抵達機場準備回家", desc: "慢慢辦理登機手續，在機場冷氣房裡休息，圓滿結束這趟快樂的旅行！", icon: <ShieldCheck className="text-emerald-500" /> }
-    ]
-  }
-];
-
-export default function App() {
-  const [selectedDay, setSelectedDay] = useState(1);
-
-  return (
-    <div className="min-h-screen bg-orange-50 font-sans text-gray-800 pb-12">
-      {/* 頭部歡迎區 */}
-      <header className="bg-white shadow-sm pt-12 pb-8 px-4 text-center border-b-4 border-orange-200">
-        <h1 className="text-3xl md:text-4xl font-bold text-orange-800 mb-4 tracking-wide">
-          🌴 2026 台灣南部五天四夜輕鬆遊
-        </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          親愛的爸爸媽媽（爺爺奶奶），這是為您們量身訂製的專屬行程。<br/>
-          <strong className="text-orange-700">原則就是：不累、不曬、吃得軟、冷氣足！</strong>
-        </p>
-      </header>
-
-      {/* 貼心提醒卡片 */}
-      <section className="max-w-4xl mx-auto mt-8 px-4">
-        <div className="bg-blue-50 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row items-center gap-6">
-          <div className="bg-blue-100 p-4 rounded-full">
-            <Info className="w-10 h-10 text-blue-600" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-blue-800 mb-2">出遊貼心小約定</h2>
-            <ul className="text-lg text-gray-700 space-y-2">
-              <li>💧 <strong>多喝水：</strong> 我們每45分鐘會把水遞給您，不渴也要喝幾口喔！</li>
-              <li>🧥 <strong>備外套：</strong> 進出車子和冷氣房溫差大，請隨時披上薄外套防感冒。</li>
-              <li>🪑 <strong>隨時坐：</strong> 行程極度寬鬆，如果覺得累，告訴我們，隨時都能停下休息。</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* 行程導航 */}
-      <section className="max-w-4xl mx-auto mt-10 px-4">
-        <div className="flex overflow-x-auto pb-4 gap-3 snap-x hide-scrollbar justify-start md:justify-center">
-          {itineraryData.map((data) => (
-            <button
-              key={data.day}
-              onClick={() => setSelectedDay(data.day)}
-              className={`snap-center flex-shrink-0 px-6 py-3 rounded-full text-lg font-bold transition-all duration-300 ${
-                selectedDay === data.day
-                  ? 'bg-orange-500 text-white shadow-lg transform scale-105'
-                  : 'bg-white text-gray-600 shadow border border-gray-200 hover:bg-orange-100'
-              }`}
-            >
-              第 {data.day} 天
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* 選中行程詳情 */}
-      <section className="max-w-4xl mx-auto mt-6 px-4">
-        {itineraryData.map((data) => (
-          <div
-            key={data.day}
-            className={`transition-all duration-500 ${
-              selectedDay === data.day ? 'block animate-fade-in' : 'hidden'
-            }`}
-          >
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-orange-100">
-              {/* 卡片頭部 */}
-              <div className="bg-gradient-to-r from-orange-400 to-amber-500 p-6 text-white">
-                <div className="flex items-center gap-2 mb-2 opacity-90 text-lg">
-                  <Calendar className="w-5 h-5" />
-                  <span>{data.date}</span>
-                </div>
-                <h2 className="text-3xl font-bold mb-4">{data.title}</h2>
-                <div className="flex flex-wrap gap-3">
-                  <span className="bg-white/20 px-4 py-1.5 rounded-full text-lg backdrop-blur-sm flex items-center gap-2">
-                    <HeartHandshake className="w-5 h-5" /> {data.level}
-                  </span>
-                </div>
-              </div>
-
-              {/* 每日提醒 */}
-              <div className="bg-yellow-50 p-4 border-b border-yellow-100 flex items-start gap-3">
-                <ShieldCheck className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
-                <p className="text-lg text-yellow-800 font-medium">{data.tips}</p>
-              </div>
-
-              {/* 時間線 */}
-              <div className="p-6 md:p-8">
-                <div className="space-y-8">
-                  {data.activities.map((activity, index) => (
-                    <div key={index} className="flex gap-4 md:gap-6">
-                      {/* 圖標與連接線 */}
-                      <div className="flex flex-col items-center">
-                        <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center border-2 border-orange-100 z-10 shadow-sm">
-                          {activity.icon}
-                        </div>
-                        {index !== data.activities.length - 1 && (
-                          <div className="w-1 h-full bg-orange-100 mt-2 rounded-full"></div>
-                        )}
-                      </div>
-                      
-                      {/* 內容 */}
-                      <div className="pb-2">
-                        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm font-bold mb-2">
-                          {activity.time}
-                        </span>
-                        <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                          {activity.event}
-                        </h3>
-                        <p className="text-xl text-gray-600 leading-relaxed">
-                          {activity.desc}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* 底部保障 */}
-      <footer className="max-w-4xl mx-auto mt-12 px-4 text-center text-gray-500">
-        <p className="text-lg">💖 全程配有完善的醫療應急預案與藥品，隨時護航您的健康與安全。</p>
-      </footer>
-
-      {/* 簡單的內聯動畫樣式 */}
-      <style dangerouslySetInnerHTML={{__html: `
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 台灣南部五天四夜輕鬆遊</title>
+    <!-- 載入 Tailwind CSS 來處理排版和顏色 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 React 核心庫 -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 載入 Babel 讓瀏覽器看得懂 React 語法 -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* 簡單的內聯動畫樣式 */
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in {
-          animation: fadeIn 0.4s ease-out forwards;
+            animation: fadeIn 0.4s ease-out forwards;
         }
         .hide-scrollbar::-webkit-scrollbar {
-          display: none;
+            display: none;
         }
         .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
-      `}} />
-    </div>
-  );
-}
+    </style>
+</head>
+<body class="bg-orange-50 font-sans text-gray-800 pb-12">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // 行程數據 (使用通用表情符號替換原本的圖示套件，確保瀏覽器直接可看)
+        const itineraryData = [
+            {
+                day: 1,
+                date: "7月28日 (週二)",
+                title: "抵達南國，嚐鮮美食",
+                level: "極度輕鬆，都在車內或冷氣房",
+                tips: "今天主要是坐車，請放鬆心情，車上冷氣充足。",
+                activities: [
+                    { time: "下午 13:50", event: "抵達高雄機場", desc: "晚輩去辦租車，您在入境大廳的冷氣座椅區舒舒服服地休息等待就好。", icon: "🚗" },
+                    { time: "下午 15:20", event: "乘車前往恆春", desc: "沿途看風景，我們特別為您安排了不曬太陽的座位（左側），車內恆溫24度。", icon: "📍" },
+                    { time: "晚上", event: "晚餐：虎炊稻臺菜", desc: "環境漂亮冷氣足！特地點了入口即化的『醉美東坡肉』和軟嫩的『瀑布流沙豆腐』，好吃又不費牙。", icon: "🍽️" },
+                    { time: "夜間", event: "回房休息", desc: "在街邊散步10分鐘消食，早點回飯店睡個好覺。", icon: "🛏️" }
+                ]
+            },
+            {
+                day: 2,
+                date: "7月29日 (週三)",
+                title: "看海吹風，品嚐海鮮",
+                level: "走路很少，下午都在室內吹冷氣",
+                tips: "中午避開大太陽，下午去喝海景咖啡。",
+                activities: [
+                    { time: "上午 09:00", event: "貓鼻頭公園 & 白沙灣", desc: "趁早上不熱，去走走平坦的步道看海。在白沙灣的樹蔭下坐著吹海風，不用下沙灘去人擠人。", icon: "☀️" },
+                    { time: "中午", event: "午餐：阿興生魚片", desc: "餐廳冷氣很強！除了嚐幾塊生魚片，主要為您點了軟嫩的『雨來菇炒蛋』、清蒸鮮魚和養胃的鮮魚湯。", icon: "🍽️" },
+                    { time: "下午 13:00", event: "台電南部展示館 (避暑)", desc: "這是最熱的時候，我們去館裡免費吹最涼的冷氣，可以坐在沙發上吃冰棒休息。", icon: "❄️" },
+                    { time: "傍晚 16:00", event: "萬里桐 海龜咖啡", desc: "坐在室內的軟沙發上，喝著咖啡，吃著軟糯的肉桂捲，透過大玻璃窗看絕美的夕陽。", icon: "☕" }
+                ]
+            },
+            {
+                day: 3,
+                date: "7月30日 (週四)",
+                title: "東海岸風光與奇妙海洋館",
+                level: "適度活動，海洋館可借輪椅代步",
+                tips: "早上看燈塔要注意防曬，傍晚看海風大要穿外套。",
+                activities: [
+                    { time: "上午 08:30", event: "船帆石 & 鵝鑾鼻燈塔", desc: "車停路邊就能和船帆石合影。鵝鑾鼻步道平緩，我們會備好遮陽傘，累了隨時在樹蔭下休息。", icon: "📍" },
+                    { time: "中午", event: "午餐：清淡麵食簡餐", desc: "找一家冷氣足、好停車的店，吃碗軟爛的牛肉麵，讓腸胃休息一下。", icon: "🍽️" },
+                    { time: "下午 13:30", event: "海洋生物博物館", desc: "全台灣最大的室內海洋館！我們全程用輪椅推著您走（保護膝蓋），在冷氣房裡輕鬆看企鵝和白鯨。", icon: "🤝" },
+                    { time: "傍晚 17:15", event: "龍磐公園觀海", desc: "下車走3分鐘就能看到壯麗的太平洋。這裡風大，記得穿上我們為您準備的防風外套喔。", icon: "🌬️" }
+                ]
+            },
+            {
+                day: 4,
+                date: "7月31日 (週五)",
+                title: "古城慢走，舒舒服服睡午覺",
+                level: "極度休閒，下午強制午休",
+                tips: "今天行程極慢，讓身體徹底放鬆。",
+                activities: [
+                    { time: "上午 09:30", event: "恆春百年古城", desc: "在不曬太陽的騎樓下慢慢走，去吃恆春特有的軟糯甜品『綠豆蒜』，溫熱微甜，去火又養生。", icon: "☕" },
+                    { time: "中午", event: "午餐：一杯咖啡 (南洋風味)", desc: "這家餐廳的咖哩有薑黃素，對關節很好，口味清淡不鹹，雞肉燉得很軟嫩。", icon: "🍽️" },
+                    { time: "下午 13:00", event: "回飯店睡午覺", desc: "連續玩了三天，今天下午啥也不做，回房間躺下好好睡個午覺（可以用枕頭把腿墊高，放鬆靜脈）。", icon: "🛏️" },
+                    { time: "傍晚 16:30", event: "看體力決定去哪", desc: "如果精神好，我們去關山看日落；如果想休息，就去平坦的紅柴坑小漁港看海，順便吃碗鮮魚湯麵。", icon: "🌅" }
+                ]
+            },
+            {
+                day: 5,
+                date: "8月1日 (週六)",
+                title: "高雄看船，吃港點準備回家",
+                level: "輕鬆返程，全程有冷氣",
+                tips: "不趕時間，平平穩穩地踏上歸途。",
+                activities: [
+                    { time: "上午 09:30", event: "睡飽退房，坐車北上", desc: "吃完早餐我們出發去高雄，上午開車能避開下午的雷陣雨，更加安全。", icon: "🚗" },
+                    { time: "中午 12:00", event: "高雄港旅運中心", desc: "坐電梯直達3樓觀景台，不用爬樓梯，全家在微風中看著大郵輪拍張合影。", icon: "🚢" },
+                    { time: "下午 13:15", event: "SKM Park 吹冷氣吃添好運", desc: "去離機場很近的商場。午餐吃著名的添好運港點：薄皮蝦餃、清湯雲吞、入口即化的陳皮牛肉球，再喝杯薏米水。", icon: "🍽️" },
+                    { time: "下午 17:00", event: "抵達機場準備回家", desc: "慢慢辦理登機手續，在機場冷氣房裡休息，圓滿結束這趟快樂的旅行！", icon: "✈️" }
+                ]
+            }
+        ];
+
+        function App() {
+            const [selectedDay, setSelectedDay] = useState(1);
+
+            return (
+                <div className="min-h-screen bg-orange-50 font-sans text-gray-800 pb-12">
+                    {/* 頭部歡迎區 */}
+                    <header className="bg-white shadow-sm pt-12 pb-8 px-4 text-center border-b-4 border-orange-200">
+                        <h1 className="text-3xl md:text-4xl font-bold text-orange-800 mb-4 tracking-wide">
+                            🌴 2026 台灣南部五天四夜輕鬆遊
+                        </h1>
+                        <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                            親愛的爸爸媽媽（爺爺奶奶），這是為您們量身訂製的專屬行程。<br/>
+                            <strong className="text-orange-700">原則就是：不累、不曬、吃得軟、冷氣足！</strong>
+                        </p>
+                    </header>
+
+                    {/* 貼心提醒卡片 */}
+                    <section className="max-w-4xl mx-auto mt-8 px-4">
+                        <div className="bg-blue-50 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row items-center gap-6">
+                            <div className="bg-blue-100 p-4 rounded-full text-4xl flex-shrink-0">
+                                ℹ️
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-blue-800 mb-2">出遊貼心小約定</h2>
+                                <ul className="text-lg text-gray-700 space-y-2">
+                                    <li>💧 <strong>多喝水：</strong> 我們每45分鐘會把水遞給您，不渴也要喝幾口喔！</li>
+                                    <li>🧥 <strong>備外套：</strong> 進出車子和冷氣房溫差大，請隨時披上薄外套防感冒。</li>
+                                    <li>🪑 <strong>隨時坐：</strong> 行程極度寬鬆，如果覺得累，告訴我們，隨時都能停下休息。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 行程導航 */}
+                    <section className="max-w-4xl mx-auto mt-10 px-4">
+                        <div className="flex overflow-x-auto pb-4 gap-3 snap-x hide-scrollbar justify-start md:justify-center">
+                            {itineraryData.map((data) => (
+                                <button
+                                    key={data.day}
+                                    onClick={() => setSelectedDay(data.day)}
+                                    className={`snap-center flex-shrink-0 px-6 py-3 rounded-full text-lg font-bold transition-all duration-300 ${
+                                        selectedDay === data.day
+                                            ? 'bg-orange-500 text-white shadow-lg transform scale-105'
+                                            : 'bg-white text-gray-600 shadow border border-gray-200 hover:bg-orange-100'
+                                    }`}
+                                >
+                                    第 {data.day} 天
+                                </button>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* 選中行程詳情 */}
+                    <section className="max-w-4xl mx-auto mt-6 px-4">
+                        {itineraryData.map((data) => (
+                            <div
+                                key={data.day}
+                                className={`transition-all duration-500 ${
+                                    selectedDay === data.day ? 'block animate-fade-in' : 'hidden'
+                                }`}
+                            >
+                                <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-orange-100">
+                                    {/* 卡片頭部 */}
+                                    <div className="bg-gradient-to-r from-orange-400 to-amber-500 p-6 text-white">
+                                        <div className="flex items-center gap-2 mb-2 opacity-90 text-lg font-semibold">
+                                            📅 {data.date}
+                                        </div>
+                                        <h2 className="text-3xl font-bold mb-4">{data.title}</h2>
+                                        <div className="flex flex-wrap gap-3">
+                                            <span className="bg-white/20 px-4 py-1.5 rounded-full text-lg backdrop-blur-sm flex items-center gap-2">
+                                                🤝 {data.level}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* 每日提醒 */}
+                                    <div className="bg-yellow-50 p-4 border-b border-yellow-100 flex items-start gap-3">
+                                        <span className="text-2xl flex-shrink-0">🛡️</span>
+                                        <p className="text-lg text-yellow-800 font-medium">{data.tips}</p>
+                                    </div>
+
+                                    {/* 時間線 */}
+                                    <div className="p-6 md:p-8">
+                                        <div className="space-y-8">
+                                            {data.activities.map((activity, index) => (
+                                                <div key={index} className="flex gap-4 md:gap-6">
+                                                    {/* 圖標與連接線 */}
+                                                    <div className="flex flex-col items-center">
+                                                        <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center border-2 border-orange-100 z-10 shadow-sm text-2xl">
+                                                            {activity.icon}
+                                                        </div>
+                                                        {index !== data.activities.length - 1 && (
+                                                            <div className="w-1 h-full bg-orange-100 mt-2 rounded-full"></div>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    {/* 內容 */}
+                                                    <div className="pb-2">
+                                                        <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-sm font-bold mb-2">
+                                                            {activity.time}
+                                                        </span>
+                                                        <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                                                            {activity.event}
+                                                        </h3>
+                                                        <p className="text-xl text-gray-600 leading-relaxed">
+                                                            {activity.desc}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </section>
+
+                    {/* 底部保障 */}
+                    <footer className="max-w-4xl mx-auto mt-12 px-4 text-center text-gray-500">
+                        <p className="text-lg">💖 全程配有完善的醫療應急預案與藥品，隨時護航您的健康與安全。</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
