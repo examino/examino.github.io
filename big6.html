@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BIG 6｜三练增肌计划</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--text:#17191c;--muted:#73777d;--line:#e8e9ec;--accent:#111;--soft:#f0f1f3}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.container{max-width:1120px;margin:auto;padding:34px 22px 70px}
+.hero{background:#111;color:#fff;border-radius:28px;padding:38px 42px;margin-bottom:22px;position:relative;overflow:hidden}
+.hero:after{content:"BIG 6";position:absolute;right:-10px;bottom:-55px;font-size:170px;font-weight:900;letter-spacing:-12px;color:#ffffff08}
+.eyebrow{font-size:12px;letter-spacing:2px;font-weight:800;color:#bfc3c8}.hero h1{font-size:42px;line-height:1.1;margin:8px 0}.hero p{color:#c9ccd0;max-width:650px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px}.stat{background:#ffffff10;border:1px solid #ffffff18;border-radius:15px;padding:13px}.stat b{display:block;font-size:21px}.stat span{font-size:12px;color:#bfc3c8}
+.tabs{display:flex;gap:8px;margin:20px 0}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 17px;font-weight:750;cursor:pointer}.tab.active{background:#111;color:#fff;border-color:#111}
+.section{display:none}.section.active{display:block}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:28px 2px 14px}.section-head h2{margin:0;font-size:27px}.section-head p{margin:3px 0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:0 12px 30px #0000000a}
+.card-top{display:flex;justify-content:space-between;gap:12px}.num{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:1px}.dose{font-size:12px;font-weight:800;background:var(--soft);padding:6px 9px;border-radius:8px;white-space:nowrap}
+.card h3{margin:6px 0 4px;font-size:20px}.focus{font-size:13px;color:var(--muted);margin:0 0 12px}
+.tip{background:#f7f7f8;border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:14px}
+.video{display:block;position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#e9eaec;text-decoration:none;color:#fff}
+.video img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.76)}
+.play{position:absolute;inset:0;display:grid;place-items:center}.play span{width:54px;height:54px;border-radius:50%;background:#fff;color:#111;display:grid;place-items:center;font-size:20px;padding-left:3px;box-shadow:0 5px 20px #0005}
+.vtitle{position:absolute;left:14px;bottom:12px;font-size:12px;font-weight:750;text-shadow:0 1px 5px #000}
+.actions{display:flex;gap:8px;margin-top:10px}.actions a{flex:1;text-align:center;text-decoration:none;padding:9px;border-radius:10px;font-size:12px;font-weight:750;background:#111;color:#fff}.actions a.alt{background:#f0f1f3;color:#222}
+.info{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:14px}.info-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px}.info-card h3{margin-top:0}.info-card ul{padding-left:20px;margin-bottom:0}.note{background:#fff8df;border:1px solid #f0df9d}
+.footer{text-align:center;color:#92969c;font-size:12px;margin-top:30px}
+@media(max-width:760px){.container{padding:18px 14px 45px}.hero{padding:28px 24px;border-radius:22px}.hero h1{font-size:34px}.stats{grid-template-columns:repeat(2,1fr)}.grid,.info{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="container">
+<header class="hero">
+<div class="eyebrow">HOME TRAINING · 3 DAYS / WEEK</div>
+<h1>BIG 6<br>三练增肌计划</h1>
+<p>为 60 kg / 182 cm、偏瘦体型设计。核心目标：增加肌肉与体重，同时用最少的辅助动作改善头前伸与轻度驼背。</p>
+<div class="stats">
+<div class="stat"><b>3× / 周</b><span>训练频率</span></div>
+<div class="stat"><b>45–60 min</b><span>单次时间</span></div>
+<div class="stat"><b>RIR 1–3</b><span>主要动作强度</span></div>
+<div class="stat"><b>6–12 reps</b><span>主要次数范围</span></div>
+</div>
+</header>
+
+<div class="tabs">
+<button class="tab active" onclick="show('a',this)">A · 全身</button>
+<button class="tab" onclick="show('b',this)">B · 全身</button>
+<button class="tab" onclick="show('rules',this)">训练规则</button>
+</div>
+
+<section id="a" class="section active">
+<div class="section-head"><div><h2>Workout A</h2><p>第 1 周：A / B / A　·　第 2 周：B / A / B</p></div></div>
+<div class="grid">
+<article class="card"><div class="card-top"><div class="num">EXERCISE 01</div><div class="dose">3 × 6–10</div></div><h3>哑铃深蹲</h3><p class="focus">股四头肌 · 臀部</p><div class="tip">脚约肩宽；膝盖跟随脚尖；控制下蹲。</div><a class="video" href="https://www.youtube.com/watch?v=nfX7IFK9UNI" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/nfX7IFK9UNI/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Dumbbell Squat · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=nfX7IFK9UNI" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=nfX7IFK9UNI" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 02</div><div class="dose">3 × 6–10</div></div><h3>哑铃卧推</h3><p class="focus">胸部 · 三头 · 前束</p><div class="tip">肩胛后缩下沉；哑铃控制下放至胸部两侧。</div><a class="video" href="https://www.youtube.com/results?search_query=dumbbell+bench+press+proper+form" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/4_QuyfOCI5U/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Dumbbell Bench Press · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/results?search_query=dumbbell+bench+press+proper+form" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/results?search_query=dumbbell+bench+press+proper+form" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 03</div><div class="dose">3 × 5–10</div></div><h3>引体向上</h3><p class="focus">背阔肌 · 二头</p><div class="tip">避免耸肩和头部前伸；胸口向杆靠近。</div><a class="video" href="https://www.youtube.com/watch?v=9yVGh3XbJ34" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/9yVGh3XbJ34/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Pull-Up · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=9yVGh3XbJ34" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=9yVGh3XbJ34" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 04</div><div class="dose">3 × 6–10</div></div><h3>哑铃罗马尼亚硬拉</h3><p class="focus">臀部 · 腘绳肌</p><div class="tip">重点是髋关节后移，不是下蹲；背部保持中立。</div><a class="video" href="https://www.youtube.com/watch?v=V8Hdl1FiNt4" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/V8Hdl1FiNt4/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Dumbbell Romanian Deadlift · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=V8Hdl1FiNt4" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=V8Hdl1FiNt4" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 05</div><div class="dose">2 × 10–15</div></div><h3>哑铃侧平举</h3><p class="focus">三角肌中束</p><div class="tip">重量不要过大；控制抬至肩高附近，不要耸肩。</div><a class="video" href="https://www.youtube.com/watch?v=XPPfnSEATJA" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/XPPfnSEATJA/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Dumbbell Lateral Raise · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=XPPfnSEATJA" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=XPPfnSEATJA" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 06</div><div class="dose">2 × 10–15</div></div><h3>Chin Tuck</h3><p class="focus">深颈屈肌 · 头前伸</p><div class="tip">头水平向后收，不要低头；每次保持 3–5 秒。</div><a class="video" href="https://www.youtube.com/watch?v=KqR1EoEmq9c" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/KqR1EoEmq9c/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Chin Tuck · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=KqR1EoEmq9c" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=KqR1EoEmq9c" target="_blank">YouTube ↗</a></div></article></div></section><section id="b" class="section">
+<div class="section-head"><div><h2>Workout B</h2><p>重点：垂直推 + 水平拉 + 单腿训练</p></div></div>
+<div class="grid"><article class="card"><div class="card-top"><div class="num">EXERCISE 01</div><div class="dose">3 × 6–10</div></div><h3>哑铃罗马尼亚硬拉</h3><p class="focus">臀部 · 腘绳肌</p><div class="tip">髋部向后推，哑铃贴近腿部，背部保持中立。</div><a class="video" href="https://www.youtube.com/watch?v=V8Hdl1FiNt4" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/V8Hdl1FiNt4/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Dumbbell Romanian Deadlift · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=V8Hdl1FiNt4" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=V8Hdl1FiNt4" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 02</div><div class="dose">3 × 6–10</div></div><h3>哑铃肩推</h3><p class="focus">三角肌 · 三头</p><div class="tip">躯干稳定；避免为了重量过度挺腰。</div><a class="video" href="https://www.youtube.com/results?search_query=dumbbell+shoulder+press+proper+form" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/qEwKCR5JCog/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Dumbbell Shoulder Press · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/results?search_query=dumbbell+shoulder+press+proper+form" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/results?search_query=dumbbell+shoulder+press+proper+form" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 03</div><div class="dose">3 × 8–12 / 侧</div></div><h3>单臂哑铃划船</h3><p class="focus">背阔肌 · 上背</p><div class="tip">背部保持平；肘部朝髋部方向拉。</div><a class="video" href="https://www.youtube.com/results?search_query=one+arm+dumbbell+row+proper+form" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/roCP6wCXPqo/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ One Arm Dumbbell Row · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/results?search_query=one+arm+dumbbell+row+proper+form" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/results?search_query=one+arm+dumbbell+row+proper+form" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 04</div><div class="dose">2 × 8–12 / 侧</div></div><h3>保加利亚分腿蹲</h3><p class="focus">股四头肌 · 臀部</p><div class="tip">后脚放椅上；前腿承担主要负荷。</div><a class="video" href="https://www.youtube.com/results?search_query=bulgarian+split+squat+proper+form" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/hbw7hdyOpq0/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Bulgarian Split Squat · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/results?search_query=bulgarian+split+squat+proper+form" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/results?search_query=bulgarian+split+squat+proper+form" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 05</div><div class="dose">2 × 8–12</div></div><h3>上斜哑铃卧推</h3><p class="focus">上胸 · 前束 · 三头</p><div class="tip">椅背约 30°；控制下放，不要追求过重。</div><a class="video" href="https://www.youtube.com/results?search_query=incline+dumbbell+press+proper+form" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/8iPEnn-ltC8/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Incline Dumbbell Press · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/results?search_query=incline+dumbbell+press+proper+form" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/results?search_query=incline+dumbbell+press+proper+form" target="_blank">YouTube ↗</a></div></article><article class="card"><div class="card-top"><div class="num">EXERCISE 06</div><div class="dose">2 × 10</div></div><h3>Chin Tuck + 胸椎活动</h3><p class="focus">头前伸 · 胸椎活动</p><div class="tip">Chin tuck 后加入温和胸椎伸展，不追求疼痛或极端幅度。</div><a class="video" href="https://www.youtube.com/watch?v=VPlT6h0-55Q" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/VPlT6h0-55Q/hqdefault.jpg" alt=""><div class="play"><span>▶</span></div><div class="vtitle">▶ Chin Tuck / Thoracic Extension · 在 YouTube 观看</div></a><div class="actions"><a href="https://www.youtube.com/watch?v=VPlT6h0-55Q" target="_blank">观看动作视频</a><a class="alt" href="https://www.youtube.com/watch?v=VPlT6h0-55Q" target="_blank">YouTube ↗</a></div></article></div></section>
+<section id="rules" class="section">
+<div class="section-head"><div><h2>训练规则</h2><p>把复杂的健身计划变成几条可以长期执行的规则。</p></div></div>
+<div class="info">
+<div class="info-card"><h3>📈 渐进超负荷</h3><ul><li>目标范围例如 3 × 6–10。</li><li>先把同一重量做到 10 / 10 / 10。</li><li>然后增加哑铃重量，回到约 6–8 次。</li><li>大动作保持 RIR 1–3，不必每组力竭。</li></ul></div>
+<div class="info-card"><h3>⏱ 休息</h3><ul><li>深蹲、卧推、RDL、肩推、引体、划船：2–3 分钟。</li><li>侧平举与体态动作：60–90 秒。</li><li>热身不需要很长：正式组前做 1–3 组递增热身即可。</li></ul></div>
+</div>
+<div class="info-card note" style="margin-top:14px"><h3>🍚 你的增肌重点</h3><p>你目前 60 kg / 182 cm，优先目标是增加肌肉与体重。蛋白质可先以约 100–120 g/day 为简单目标；如果连续 2–3 周体重没有上升，可增加约 150–250 kcal/day。</p></div>
+<div class="info-card" style="margin-top:14px"><h3>🧍 体态</h3><p>不要把“改善驼背”理解成整天强行挺胸、把头往后缩。训练重点是上背力量、肩胛控制、胸椎活动和深颈屈肌控制。若出现颈部疼痛、麻木、放射痛或明显头晕，应停止相关动作并进行专业评估。</p></div>
+</section>
+<footer class="footer">视频链接采用 YouTube 直接打开模式，避免第三方网页内嵌播放器的 Error 153。YouTube 官方说明，缺少 HTTP Referer 时嵌入播放器可能被阻止。</footer>
+</div>
+<script>
+function show(id,btn){
+document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+btn.classList.add('active');
+window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
