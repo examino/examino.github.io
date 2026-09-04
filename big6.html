@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big 6 居家力量训练与体态纠正交互手册</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8F9FA;
+            color: #1E293B;
+        }
+        /* Mandatory Chart Container Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased">
+
+    <!-- Chosen Palette: Warm Neutral & Ember Slate -->
+    <!-- Application Structure Plan:
+        Designed as an intuitive single-page interactive portal tailored specifically to 182cm / 60kg ectomorph body type with Upper Crossed Syndrome.
+        Structure:
+        1. Navigation Header & Profile Summary: Quick view of user stats, training goals, and navigation tabs.
+        2. Weekly Interactive Training Planner (Day A, Day B, Day C, Warmup Activation): Tabbed view with rich exercise cards, muscle tags, key mechanics, biomechanical long-lever adaptations, and video links.
+        3. Real-time Training Mode & Rest Timer: Interactive check-off system for daily sets with built-in rest timer (30s-120s) and sound cues.
+        4. Biomechanics & Posture Correction Matrix: Deep dive into 182cm long limbs (long femur/humerus) and Forward Head/Hunchback fixes with interactive diagnostic toggles.
+        5. Growth & Nutrition Planner: Dynamic calculator for daily protein/calories and Chart.js progressive strength growth predictor.
+    -->
+    <!-- Visualization & Content Choices:
+        - Exercise Grid: HTML/Tailwind card matrix with dynamic JS filtering (Goal: Organize & Inform).
+        - Rest Timer: Dynamic JS countdown timer (Goal: Interactive Training Support).
+        - Strength & Volume Progression: Chart.js Line Chart with maintainAspectRatio: false in responsive container (Goal: Trend & Change).
+        - Nutrition/Calorie Split: HTML dynamic cards based on JS metric calculation (Goal: Inform & Personalize).
+        - NO SVG or Mermaid used. Unicode icons and standard styled CSS badges used exclusively.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Header & Profile Bar -->
+    <header class="bg-slate-800 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4 border-b border-slate-700">
+                <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                    <span class="text-3xl">🏋️‍♂️</span>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-slate-100">Big 6 增肌与体态纠正交互系统</h1>
+                        <p class="text-xs text-slate-400">定制为 182 cm / 60 kg 长杠杆体型 & 上交叉综合征</p>
+                    </div>
+                </div>
+                <!-- Profile Badge -->
+                <div class="flex items-center space-x-4 bg-slate-700/60 px-4 py-2 rounded-xl text-xs border border-slate-600">
+                    <div><span class="text-slate-400">身高:</span> <span class="font-semibold text-amber-400">182 cm</span></div>
+                    <div class="h-3 w-px bg-slate-500"></div>
+                    <div><span class="text-slate-400">体重:</span> <span class="font-semibold text-amber-400">60 kg</span></div>
+                    <div class="h-3 w-px bg-slate-500"></div>
+                    <div><span class="text-slate-400">频次:</span> <span class="font-semibold text-emerald-400">周三练</span></div>
+                </div>
+            </div>
+            <!-- Main Navigation Tabs -->
+            <nav class="flex space-x-2 md:space-x-8 overflow-x-auto py-2 custom-scrollbar text-sm font-medium">
+                <button id="tab-btn-plan" onclick="switchTab('plan')" class="tab-btn active border-b-2 border-amber-500 text-amber-400 pb-2 px-1 whitespace-nowrap flex items-center gap-1.5">
+                    <span>📅</span> 训练计划与动作指南
+                </button>
+                <button id="tab-btn-timer" onclick="switchTab('timer')" class="tab-btn border-b-2 border-transparent text-slate-300 hover:text-white pb-2 px-1 whitespace-nowrap flex items-center gap-1.5">
+                    <span>⏱️</span> 实时训练与组间计时
+                </button>
+                <button id="tab-btn-posture" onclick="switchTab('posture')" class="tab-btn border-b-2 border-transparent text-slate-300 hover:text-white pb-2 px-1 whitespace-nowrap flex items-center gap-1.5">
+                    <span>📐</span> 长骨杠杆与体态解剖
+                </button>
+                <button id="tab-btn-nutrition" onclick="switchTab('nutrition')" class="tab-btn border-b-2 border-transparent text-slate-300 hover:text-white pb-2 px-1 whitespace-nowrap flex items-center gap-1.5">
+                    <span>📈</span> 增重计算与容量预测
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- ==================== SECTION 1: WORKOUT PLAN & EXERCISES ==================== -->
+        <section id="section-plan" class="space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
+                <h2 class="text-base font-bold text-amber-900 flex items-center gap-2">
+                    <span>💡</span> 方案设计初衷与逻辑说明
+                </h2>
+                <p class="text-xs md:text-sm text-amber-800 mt-1 leading-relaxed">
+                    本训练方案精简高效，专为<b>182 cm 消瘦体型（长肢体力臂）</b>与<b>脖子前倾、轻度驼背（上交叉综合征）</b>打造。一周三练，每天仅包含 4 个核心动作，极大降低神经疲劳。每个动作均针对长杠杆避坑（如足跟垫高、中立握等），防止关节撞击与腰背代偿。
+                </p>
+            </div>
+
+            <!-- Day Selector Filters -->
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex flex-wrap items-center gap-2" id="day-filter-buttons">
+                    <button onclick="filterDay('all')" class="day-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-white transition">全部动作</button>
+                    <button onclick="filterDay('warmup')" class="day-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">🧘 训练前热身与矫正</button>
+                    <button onclick="filterDay('dayA')" class="day-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">周一：Day A (膝主导/推拉)</button>
+                    <button onclick="filterDay('dayB')" class="day-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">周三：Day B (髋主导/垂直推拉)</button>
+                    <button onclick="filterDay('dayC')" class="day-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">周五：Day C (单侧/上胸/拉力)</button>
+                </div>
+                <div class="text-xs text-slate-500">
+                    显示 <span id="exercise-count" class="font-bold text-slate-800">16</span> 个训练项目
+                </div>
+            </div>
+
+            <!-- Exercise Cards Grid -->
+            <div id="exercise-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
+                <!-- Injected dynamically via JavaScript -->
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 2: TIMER & LIVE WORKOUT ==================== -->
+        <section id="section-timer" class="space-y-6 hidden">
+            <!-- Section Intro -->
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-xl shadow-sm">
+                <h2 class="text-base font-bold text-indigo-900 flex items-center gap-2">
+                    <span>⏱️</span> 实时训练打卡与精确组间休息控制
+                </h2>
+                <p class="text-xs md:text-sm text-indigo-800 mt-1 leading-relaxed">
+                    对于消瘦体型（60 kg），<b>充分的组间休息（60~120秒）</b>是保证每组输出最大力量、促进肌肉肥大的关键。在此模式下选择今日训练内容，打卡完成组数，并触发智能组间计时。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left: Timer Widget -->
+                <div class="bg-slate-800 text-white p-6 rounded-2xl shadow-md border border-slate-700 flex flex-col justify-between items-center text-center">
+                    <div class="w-full">
+                        <span class="text-xs font-bold text-amber-400 tracking-wider uppercase">Rest Timer Control</span>
+                        <h3 class="text-lg font-bold mt-1 text-slate-100">组间休息倒计时</h3>
+                    </div>
+
+                    <!-- Countdown Display -->
+                    <div class="my-6">
+                        <div id="timer-display" class="text-6xl font-extrabold tracking-mono font-mono text-amber-400">01:30</div>
+                        <p id="timer-status" class="text-xs text-slate-400 mt-2">准备就绪 - 点击下方预设时间启动</p>
+                    </div>
+
+                    <!-- Preset Time Buttons -->
+                    <div class="grid grid-cols-4 gap-2 w-full mb-4">
+                        <button onclick="setTimerPreset(30)" class="py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-bold text-slate-200 transition">30秒</button>
+                        <button onclick="setTimerPreset(60)" class="py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-bold text-slate-200 transition">60秒</button>
+                        <button onclick="setTimerPreset(90)" class="py-2 bg-amber-600 hover:bg-amber-500 rounded-lg text-xs font-bold text-white transition">90秒</button>
+                        <button onclick="setTimerPreset(120)" class="py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-xs font-bold text-slate-200 transition">120秒</button>
+                    </div>
+
+                    <!-- Timer Action Buttons -->
+                    <div class="flex gap-3 w-full">
+                        <button id="start-timer-btn" onclick="toggleTimer()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-bold text-white transition shadow-lg">启动计时</button>
+                        <button onclick="resetTimer()" class="px-4 py-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-sm font-bold text-slate-300 transition">重置</button>
+                    </div>
+                </div>
+
+                <!-- Right: Daily Routine Interactive Checklist -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center pb-4 border-b border-slate-100 mb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">今日训练项目打卡</h3>
+                                <p class="text-xs text-slate-500">选择训练日并勾选完成组数，自动触发休息计时器</p>
+                            </div>
+                            <select id="routine-select" onchange="renderLiveRoutine()" class="bg-slate-50 border border-slate-300 text-slate-800 text-xs rounded-lg p-2 font-semibold">
+                                <option value="dayA">周一：Day A (膝主导/水平推拉)</option>
+                                <option value="dayB">周三：Day B (髋主导/垂直推拉)</option>
+                                <option value="dayC">周五：Day C (单侧/上胸/拉力)</option>
+                                <option value="warmup">训练前热身与体态矫正</option>
+                            </select>
+                        </div>
+
+                        <!-- Live Exercise Checklist -->
+                        <div id="live-checklist" class="space-y-4 max-h-[380px] overflow-y-auto custom-scrollbar pr-2">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+                        <span>今日已完成组数：<strong id="completed-sets-count" class="text-emerald-600 font-bold">0</strong> 组</span>
+                        <button onclick="resetDailyChecklist()" class="text-slate-400 hover:text-slate-600 underline">重置今日打卡</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 3: BIOMECHANICS & POSTURE ==================== -->
+        <section id="section-posture" class="space-y-6 hidden">
+            <!-- Section Intro -->
+            <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-xl shadow-sm">
+                <h2 class="text-base font-bold text-teal-900 flex items-center gap-2">
+                    <span>📐</span> 182cm 长骨杠杆解剖学与体态矫正原理
+                </h2>
+                <p class="text-xs md:text-sm text-teal-800 mt-1 leading-relaxed">
+                    消瘦且身高 182 cm 的受训者通常拥有较长的股骨（大腿骨）与肱骨（大臂骨）。传统的健身教条（如“深蹲绝对不能垫脚跟”、“卧推必须90度展开大臂”）会导致严重关节磨损与腰椎代偿。同时，脖子前倾与驼背要求我们在推举与拉力动作中重新调整角度。
+                </p>
+            </div>
+
+            <!-- Biomechanics Breakdown Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Card 1: Femur & Squat Depth -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="p-2 bg-amber-100 text-amber-800 rounded-lg text-lg">🦵</span>
+                        <h3 class="font-bold text-slate-800 text-sm md:text-base">长股骨（大腿骨）与下蹲折叠痛点</h3>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+                        <p><b>生物力学痛点：</b> 182 cm 肢体长受训者在裸脚平底蹲时，由于髋关节旋转轴距离膝盖较远，下蹲时躯干必须大幅度前倾折叠才能维持系统重心在脚掌上方。这极易造成下背部（腰椎）弯曲代偿受损。</p>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <span class="font-semibold text-emerald-700">💡 本方案破局方法：</span>
+                            <p class="mt-1">采用<b>瑜伽砖垫高足跟 3~5 cm</b>。垫高足跟降低了踝关节背屈受限门槛，将膝关节前移，配合胸前抱哑铃的重心前置，使躯干能够在全程保持高度直立，刺激纯粹转移至股四头肌。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Long Humerus & Shoulder Impingement -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="p-2 bg-blue-100 text-blue-800 rounded-lg text-lg">💪</span>
+                        <h3 class="font-bold text-slate-800 text-sm md:text-base">长肱骨（大臂骨）与肩峰撞击风险</h3>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+                        <p><b>生物力学痛点：</b> 长臂在做杠铃卧推或推肩时，力臂过长。若大臂完全展开呈 90°（T字形），肩峰下间隙会被大幅挤压，产生冈上肌腱磨损与弹响。</p>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <span class="font-semibold text-emerald-700">💡 本方案破局方法：</span>
+                            <p class="mt-1">全面采用<b>哑铃替代刚性杠铃</b>，推胸时大臂保持 <b>45°~60° 夹角（箭头形）</b>；坐姿推肩采用<b>75° 靠背 + 掌心相对中立握（Scaption）</b>，顺应肩胛骨自然平面，打开肩峰下间隙。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Forward Head Posture -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="p-2 bg-red-100 text-red-800 rounded-lg text-lg">🗣️</span>
+                        <h3 class="font-bold text-slate-800 text-sm md:text-base">脖子前倾（上交叉综合征）纠正机制</h3>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+                        <p><b>解剖学病因：</b> 长期看电脑手机导致颈深屈肌（头长肌、颈长肌）无力退化，而胸锁乳突肌与斜方肌上束过度紧张，将头部向前下拉。</p>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <span class="font-semibold text-emerald-700">💡 每日矫正策略：</span>
+                            <p class="mt-1">进行<b>水平收下巴（Chin Tuck）</b>训练，注意是<b>轴向水平向后平移</b>而非低头折颈。在所有重物推举动作中，始终保持“收下巴、顶头顶”的神经控制。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Kyphosis & Thoracic Mobility -->
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="p-2 bg-purple-100 text-purple-800 rounded-lg text-lg">🧘</span>
+                        <h3 class="font-bold text-slate-800 text-sm md:text-base">轻度驼背与胸椎伸展度锁死</h3>
+                    </div>
+                    <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+                        <p><b>解剖学病因：</b> 胸椎失去伸展能力，处于锁死过度后凸状态；胸大肌与胸小肌紧张短缩，将两肩拉向前方（圆肩）。</p>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <span class="font-semibold text-emerald-700">💡 每日矫正策略：</span>
+                            <p class="mt-1">训练前必须进行<b>仰卧瑜伽砖胸椎伸展</b>与<b>门框胸肌拉伸</b>，随后利用<b>俯卧 Y-T-W</b> 强效唤醒失活的中下斜方肌与菱形肌，让肩胛骨重获后缩下沉能力。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posture & Technique Diagnostic Checklist -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+                    <span>✅</span> 长肢体体态训练自查表
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-700">
+                    <label class="flex items-start gap-2.5 p-2 bg-slate-50 rounded border border-slate-100 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 text-amber-600 rounded">
+                        <span>深蹲时，我已垫高足跟 3~5 cm 且双手紧扣哑铃贴紧胸骨，腰椎无前倾折叠。</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 bg-slate-50 rounded border border-slate-100 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 text-amber-600 rounded">
+                        <span>卧推下放时，我的哑铃大臂夹角保持在 45°~60°（箭头形），前臂全程垂直于地面。</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 bg-slate-50 rounded border border-slate-100 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 text-amber-600 rounded">
+                        <span>推肩时，靠背调节至 75°，手掌呈中立对握，下巴收紧不挺胸拱桥。</span>
+                    </label>
+                    <label class="flex items-start gap-2.5 p-2 bg-slate-50 rounded border border-slate-100 cursor-pointer">
+                        <input type="checkbox" class="mt-0.5 text-amber-600 rounded">
+                        <span>划船拉起时，由肘关节向斜后方骨盆引导，顶点主动夹紧两肩胛骨停顿 1 秒。</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== SECTION 4: NUTRITION & PROGRESS ==================== -->
+        <section id="section-nutrition" class="space-y-6 hidden">
+            <!-- Section Intro -->
+            <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl shadow-sm">
+                <h2 class="text-base font-bold text-emerald-900 flex items-center gap-2">
+                    <span>📈</span> 60 kg 增重营养计算器与容量进阶预测
+                </h2>
+                <p class="text-xs md:text-sm text-emerald-800 mt-1 leading-relaxed">
+                    对于消瘦体型（外胚层），“三分练，七分吃”。没有充足的热量盈余与蛋白质，再完美的训练计划也无法转化为肌肉。下表根据您的 60 kg 体重自动计算每日关键营养指标，并展示未来 8 周的渐进追负荷容量预测。
+                </p>
+            </div>
+
+            <!-- Dynamic Calculator Widget -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Calculator Controls -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100">营养指标计算</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">当前体重 (kg)</label>
+                                <input type="number" id="input-weight" value="60" min="40" max="120" onchange="calculateNutrition()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm font-bold text-slate-800">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">训练目标</label>
+                                <select id="input-goal" onchange="calculateNutrition()" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm font-semibold text-slate-800">
+                                    <option value="lean_bulk" selected>干净增肌 (+300 kcal 热量盈余)</option>
+                                    <option value="fast_bulk">快速增重 (+500 kcal 热量盈余)</option>
+                                    <option value="maintenance">维持现有体重</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                        * 建议每周秤重 1 次，理想增加速率为每月 1.0 ~ 1.5 kg。
+                    </div>
+                </div>
+
+                <!-- Calculated Output Cards -->
+                <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-800 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <span class="text-xs text-slate-400">每日目标热量</span>
+                        <div id="out-calories" class="text-2xl font-black text-amber-400 my-2">2350 kcal</div>
+                        <span class="text-[10px] text-slate-400">维持基代 + 盈余</span>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <span class="text-xs text-slate-400">每日蛋白质需求</span>
+                        <div id="out-protein" class="text-2xl font-black text-emerald-400 my-2">120 g</div>
+                        <span class="text-[10px] text-slate-400">按 2.0g / kg 体重</span>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <span class="text-xs text-slate-400">每日碳水化合物</span>
+                        <div id="out-carbs" class="text-2xl font-black text-blue-400 my-2">310 g</div>
+                        <span class="text-[10px] text-slate-400">主力训练能量供应</span>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <span class="text-xs text-slate-400">每日优质脂肪</span>
+                        <div id="out-fat" class="text-2xl font-black text-purple-400 my-2">65 g</div>
+                        <span class="text-[10px] text-slate-400">睾酮合成保障</span>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <span class="text-xs text-slate-400">每日饮水量</span>
+                        <div id="out-water" class="text-2xl font-black text-cyan-400 my-2">2.5 L</div>
+                        <span class="text-[10px] text-slate-400">促进代谢与肌水合</span>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-4 rounded-xl flex flex-col justify-between shadow-sm">
+                        <span class="text-xs text-slate-400">月度预期增重</span>
+                        <div id="out-gain" class="text-2xl font-black text-amber-400 my-2">+1.2 kg</div>
+                        <span class="text-[10px] text-slate-400">优质肌肉为主</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progressive Overload Chart -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800">8周渐进式超负荷 (Progressive Overload) 容量预测</h3>
+                        <p class="text-xs text-slate-500">每周通过增加 1 次次数或微调 1~2 kg 负重，促使长骨肌肉持续生长</p>
+                    </div>
+                </div>
+
+                <!-- Mandatory Responsive Chart Container -->
+                <div class="chart-container">
+                    <canvas id="volumeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-500 text-xs py-6 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>Big 6 居家力量训练与体态纠正体系 · 专为 182cm/60kg 个体定制</p>
+            <p class="text-slate-600">所有练习动作均需严格遵守解剖中立位，遇关节疼痛请立即停止并咨询专业医师或物理治疗师。</p>
+        </div>
+    </footer>
+
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Data Base for All 16 Exercises
+        const exerciseData = [
+            // --- Warmup & Posture (4) ---
+            {
+                id: 'w1',
+                day: 'warmup',
+                nameCN: '仰卧瑜伽砖胸椎伸展',
+                nameEN: 'Sustained Thoracic Extension with Yoga Block',
+                target: '胸椎解锁 / 姿态矫正',
+                equip: '健身瑜伽砖',
+                setsReps: '静止深呼吸保持 60 秒',
+                youtubeQuery: 'Sustained Thoracic Extension with Yoga Block',
+                youtubeLink: 'https://www.youtube.com/watch?v=VlFM1_qmMNw',
+                mechanics: '将瑜伽砖横放在两肩胛骨下缘水平线（中胸段），防止大重量卧推/推肩时腰椎代偿性超伸反弓。',
+                pitfall: '切勿将砖块垫在腰椎处！双手托住后脑勺，呼气时沉头下肘，感受胸椎被动反向伸展。'
+            },
+            {
+                id: 'w2',
+                day: 'warmup',
+                nameCN: '单侧门框胸肌拉伸',
+                nameEN: 'Doorway Chest Stretch',
+                target: '胸大肌/胸小肌松解',
+                equip: '门框 / 墙角',
+                setsReps: '双侧各 25 秒 × 2 组',
+                youtubeQuery: 'Doorway Chest Stretch Rehab Hero',
+                youtubeLink: 'https://www.youtube.com/watch?v=O8rJw_TmC1Y',
+                mechanics: '降低紧张短缩的胸肌张力，阻断其对肩胛骨前倾、圆肩的强拉力。',
+                pitfall: '大臂与躯干呈 90°~100°，迈出同侧脚前移并微旋躯干。严禁耸肩或用手死抓门框。'
+            },
+            {
+                id: 'w3',
+                day: 'warmup',
+                nameCN: '水平收下巴训练',
+                nameEN: 'Chin Tuck',
+                target: '颈深屈肌激活 / 纠正脖子前倾',
+                equip: '徒手',
+                setsReps: '8-10 次，末端停顿 2 秒',
+                youtubeQuery: 'How To Do Chin Tucks Exercise Correctly PostureFlow',
+                youtubeLink: 'https://www.youtube.com/watch?v=gIBoxQ6AlS0',
+                mechanics: '激活深层退化失活的颈深屈肌，纠正头部前倾与颈椎力线。',
+                pitfall: '严禁低头折颈！视线始终保持平视前方，是头颈的水平向后平移（挤双下巴）。'
+            },
+            {
+                id: 'w4',
+                day: 'warmup',
+                nameCN: '俯卧 Y-T-W 肩胛后缩激活',
+                nameEN: 'Prone Y-T-W Raises',
+                target: '中下斜方肌 / 菱形肌',
+                equip: '徒手 / 轻重量瑜伽砖',
+                setsReps: '每个字母 6 次，顶峰收缩 1 秒',
+                youtubeQuery: 'Prone Y T W Form Demo Active Life',
+                youtubeLink: 'https://www.youtube.com/watch?v=QdGTI4Lshg4',
+                mechanics: '唤醒背侧处于抑制状态的肌肉，使肩胛骨重获后缩与下沉控制力。',
+                pitfall: '大拇指始终朝天，由肩胛骨带动手臂浮起，切忌用腰部反弓借力。'
+            },
+
+            // --- Day A (4) ---
+            {
+                id: 'a1',
+                day: 'dayA',
+                nameCN: '瑜伽砖垫跟高脚杯深蹲',
+                nameEN: 'Heels-Elevated DB Goblet Squat',
+                target: '下肢膝主导 / 股四头肌',
+                equip: '可调节哑铃 + 瑜伽砖',
+                setsReps: '3-4 组 × 8-12 次',
+                youtubeQuery: 'Dumbbell Goblet Squat Heels Elevated Fitness Lab',
+                youtubeLink: 'https://www.youtube.com/watch?v=lmWPn5Q-TSE',
+                mechanics: '【长骨极要】垫高足跟降低踝背屈门槛，胸前抱哑铃将系统重心前移，彻底解决 182cm 长股骨下蹲躯干过度折叠痛点。',
+                pitfall: '脚后跟垫高 3~5 cm，两肘自然向下内收，膝盖与第二脚趾方向一致，避免内扣。'
+            },
+            {
+                id: 'a2',
+                day: 'dayA',
+                nameCN: '平板哑铃卧推',
+                nameEN: 'Flat Dumbbell Bench Press',
+                target: '上肢水平推 / 胸大肌',
+                equip: '可调节哑铃 + 健身椅',
+                setsReps: '3-4 组 × 8-10 次',
+                youtubeQuery: 'Best Dumbbell Bench Press Tutorial Davis Diley',
+                youtubeLink: 'https://www.youtube.com/watch?v=1V3vpcaxRYQ',
+                mechanics: '【长骨极要】哑铃轨迹自由，避免杠铃刚性下压引发的长肱骨肩峰撞击。',
+                pitfall: '肩胛骨向后夹紧并向下沉！大臂与躯干呈 45°~60° 箭头形，严禁展开成 90° T字形。离心慢下放 3 秒。'
+            },
+            {
+                id: 'a3',
+                day: 'dayA',
+                nameCN: '俯卧上斜胸部支撑哑铃划船',
+                nameEN: 'Chest Supported Incline DB Row',
+                target: '上肢水平拉 / 中下斜方肌与背阔肌',
+                equip: '可调节哑铃 + 健身椅',
+                setsReps: '3-4 组 × 10-12 次',
+                youtubeQuery: 'Chest Supported Dumbbell Row Fit Father Project',
+                youtubeLink: 'https://www.youtube.com/watch?v=_b6ch2nIchk',
+                mechanics: '由 30°~45° 健身椅承载胸部，完全消除消瘦受训者竖脊肌过早力竭与代偿弯腰的问题。',
+                pitfall: '启动时先做肩胛骨主动后缩，手肘引导向斜后方骨盆划动，顶点停顿夹背 1 秒。'
+            },
+            {
+                id: 'a4',
+                day: 'dayA',
+                nameCN: '卷腹轮跪姿限位推展',
+                nameEN: 'Kneeling Ab Wheel Rollout with Block Stop',
+                target: '核心抗伸展 / 腹横肌',
+                equip: '卷腹轮 + 瑜伽砖',
+                setsReps: '3 组 × 8-10 次',
+                youtubeQuery: 'Ab Wheel Rollouts For Beginners FitnessFAQs',
+                youtubeLink: 'https://www.youtube.com/watch?v=6DUbeqa9g3M',
+                mechanics: '顶级的躯干抗伸展训练；通过瑜伽砖硬限位，杜绝核心力竭导致的腰椎塌陷受损。',
+                pitfall: '启动前骨盆主动后倾，上背呈微弓空心状态（Hollow Position）。推行全程绝对不可塌腰！'
+            },
+
+            // --- Day B (4) ---
+            {
+                id: 'b1',
+                day: 'dayB',
+                nameCN: '哑铃罗马尼亚硬拉 (RDL)',
+                nameEN: 'Dumbbell Romanian Deadlift',
+                target: '下肢髋主导 / 臀大肌与腘绳肌',
+                equip: '可调节哑铃',
+                setsReps: '3-4 组 × 8-10 次',
+                youtubeQuery: 'FIX Your RDL Form Squat University',
+                youtubeLink: 'https://www.youtube.com/watch?v=5bJEigM5iVg',
+                mechanics: '髋铰链核心基石，拉长强化臀大肌与后侧动力链抗扭刚度。',
+                pitfall: '微屈膝 15° 后全程锁定膝角！想象臀部向后水平撞墙。哑铃必须全程紧贴腿前侧下滑，远离身体会倍增腰椎负担。'
+            },
+            {
+                id: 'b2',
+                day: 'dayB',
+                nameCN: '坐姿中立握哑铃推肩',
+                nameEN: 'Seated Neutral Grip DB Shoulder Press',
+                target: '上肢垂直推 / 三角肌前中束',
+                equip: '可调节哑铃 + 健身椅',
+                setsReps: '3 组 × 8-10 次',
+                youtubeQuery: 'Seated Neutral Grip Dumbbell Shoulder Press Demo Hybrid Headquarters',
+                youtubeLink: 'https://www.youtube.com/watch?v=7oH0algsdww',
+                mechanics: '【体态友好】75° 靠背提供胸椎支撑；掌心相对中立握将大臂约束在肩胛骨平面，拓宽肩峰下间隙，告别弹响。',
+                pitfall: '头部中立收下巴，严禁肋骨向上外翻或腰部过度拱桥。匀速下放至大臂与前臂呈 90°。'
+            },
+            {
+                id: 'b3',
+                day: 'dayB',
+                nameCN: '对掌中立握引体向上（慢离心）',
+                nameEN: 'Neutral Grip Eccentric Pull-Up',
+                target: '上肢垂直拉 / 背阔肌',
+                equip: '引体杆 + 健身椅',
+                setsReps: '3 组 × 4-6 次 (4秒慢离心)',
+                youtubeQuery: 'Mastering the Eccentric Pull Up TrainFTW',
+                youtubeLink: 'https://www.youtube.com/watch?v=0e2JXjBtRlQ',
+                mechanics: '对掌中立握对肩肘关节极友好；脚踩椅借力向上 + 4~5秒超慢离心下放，高效累积背阔肌张力。',
+                pitfall: '最高点主动下沉肩胛骨，下降过程必须整整耗时 4~5 秒。底部触地前保持控制，严禁猛坠。'
+            },
+            {
+                id: 'b4',
+                day: 'dayB',
+                nameCN: '俯卧上斜哑铃反向飞鸟',
+                nameEN: 'Incline Prone Dumbbell Reverse Fly',
+                target: '三角肌后束 / 菱形肌 (上交叉靶向补强)',
+                equip: '可调节哑铃 (极轻) + 健身椅',
+                setsReps: '3 组 × 12-15 次',
+                youtubeQuery: 'Reverse Fly With Dumbbells On An Incline Bench Shane Niemeyer',
+                youtubeLink: 'https://www.youtube.com/watch?v=bMD474hAjDE',
+                mechanics: '针对上交叉综合征的靶向补强动作，直接刺激长期处于拉长软弱状态的背侧肌群。',
+                pitfall: '选用极轻负重（单边 2~4 kg）！肘部微屈锁定，后肩发力横向抬起，顶峰停顿 1 秒，切忌耸斜方肌借力。'
+            },
+
+            // --- Day C (4) ---
+            {
+                id: 'c1',
+                day: 'dayC',
+                nameCN: '哑铃保加利亚分腿蹲',
+                nameEN: 'Dumbbell Bulgarian Split Squat',
+                target: '单侧下肢力量 / 臀肌与股四头肌',
+                equip: '可调节哑铃 + 健身椅',
+                setsReps: '3 组 × 8-10 次/侧',
+                youtubeQuery: 'Bulgarian Split Squat Tutorial Squat University',
+                youtubeLink: 'https://www.youtube.com/watch?v=lG3MsPmEQQk',
+                mechanics: '消除左右腿肌力不平衡，同时在下蹲时对后侧腿髋屈肌产生动态伸展，矫正骨盆失衡。',
+                pitfall: '前脚全掌蹬地，后脚仅搭在椅上维持平衡，严禁后腿主动蹬椅借力。躯干保持 15° 微前倾中立角。'
+            },
+            {
+                id: 'c2',
+                day: 'dayC',
+                nameCN: '上斜哑铃卧推 (30° 倾角)',
+                nameEN: 'Incline Dumbbell Bench Press 30°',
+                target: '胸大肌锁骨头 (上胸)',
+                equip: '可调节哑铃 + 健身椅',
+                setsReps: '3-4 组 × 8-10 次',
+                youtubeQuery: 'PERFECT Incline Dumbbell Chest Press DeltaBolic',
+                youtubeLink: 'https://www.youtube.com/watch?v=8fXfwG4ftaQ',
+                mechanics: '集中刺激胸大肌上部，向上牵拉锁骨与胸骨，改善消瘦个体胸部塌陷的外观。',
+                pitfall: '角度严格控制在 30°（超过 45° 负荷会转移到前三角肌）。掌心向斜前方 45° 中立夹角推起。'
+            },
+            {
+                id: 'c3',
+                day: 'dayC',
+                nameCN: '支撑单臂哑铃划船',
+                nameEN: 'Single Arm Dumbbell Row',
+                target: '单侧背阔肌 / 核心抗扭转',
+                equip: '可调节哑铃 + 健身椅',
+                setsReps: '3 组 × 10-12 次/侧',
+                youtubeQuery: 'How to Single Arm Dumbbell Row TylerPath',
+                youtubeLink: 'https://www.youtube.com/watch?v=qN54-QNO1eQ',
+                mechanics: '三点支撑为脊柱提供极佳抗扭转保护，单侧长行程拉伸极大增强背阔肌与躯干抗侧屈核心。',
+                pitfall: '启动时锁死核心，严禁扭转躯干歪斜骨盆！肘部引导呈弧形向斜后方髋骨（口袋）方向回拉。'
+            },
+            {
+                id: 'c4',
+                day: 'dayC',
+                nameCN: '单杠悬垂肩胛下沉',
+                nameEN: 'Scapular Pull-ups / Depression',
+                target: '下斜方肌 / 肩带悬吊稳定性 / 握力',
+                equip: '引体杆',
+                setsReps: '3 组 × 8-10 次 + 静止悬挂 20 秒',
+                youtubeQuery: 'Scapular Pull Ups Beginner to Advanced Zack Henderson',
+                youtubeLink: 'https://www.youtube.com/watch?v=-ZIpSoTRsuE',
+                mechanics: '在悬垂状态下纯粹通过下斜方肌收缩带动肩胛骨下压，增强肩带悬吊稳定性，打牢手部肌腱耐力。',
+                pitfall: '绝对不弯曲手臂！双肘保持笔直锁定，纯粹凭借双侧肩胛骨向下沉、向内聚拢将身体提升 5~10 cm。'
+            }
+        ];
+
+        // Global Dynamic State
+        let currentDayFilter = 'all';
+        let timerInterval = null;
+        let timerSeconds = 90;
+        let timerRunning = false;
+        let completedSetsCount = 0;
+        let volumeChartInstance = null;
+
+        // Initialize App on DOM Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderExercises();
+            renderLiveRoutine();
+            calculateNutrition();
+            initVolumeChart();
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabKey) {
+            const tabs = ['plan', 'timer', 'posture', 'nutrition'];
+            tabs.forEach(t => {
+                const sec = document.getElementById(`section-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (t === tabKey) {
+                    sec.classList.remove('hidden');
+                    btn.classList.add('border-amber-500', 'text-amber-400');
+                    btn.classList.remove('border-transparent', 'text-slate-300');
+                } else {
+                    sec.classList.add('hidden');
+                    btn.classList.remove('border-amber-500', 'text-amber-400');
+                    btn.classList.add('border-transparent', 'text-slate-300');
+                }
+            });
+        }
+
+        // Exercise Filtering Logic
+        function filterDay(day) {
+            currentDayFilter = day;
+            document.querySelectorAll('.day-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-600');
+            });
+            event.target.classList.remove('bg-slate-100', 'text-slate-600');
+            event.target.classList.add('bg-slate-800', 'text-white');
+            renderExercises();
+        }
+
+        // Render Exercise Cards Grid
+        function renderExercises() {
+            const grid = document.getElementById('exercise-grid');
+            grid.innerHTML = '';
+
+            const filtered = exerciseData.filter(ex => {
+                if (currentDayFilter === 'all') return true;
+                return ex.day === currentDayFilter;
+            });
+
+            document.getElementById('exercise-count').innerText = filtered.length;
+
+            filtered.forEach(ex => {
+                const dayTagColor = ex.day === 'warmup' ? 'bg-teal-100 text-teal-800' :
+                                   ex.day === 'dayA' ? 'bg-amber-100 text-amber-800' :
+                                   ex.day === 'dayB' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
+                
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-2">
+                            <div>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase ${dayTagColor}">${getDayName(ex.day)}</span>
+                                <h3 class="text-base font-bold text-slate-800 mt-1">${ex.nameCN}</h3>
+                                <p class="text-[11px] text-slate-400 font-mono">${ex.nameEN}</p>
+                            </div>
+                            <a href="${ex.youtubeLink}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-semibold flex items-center gap-1 border border-red-200 transition shrink-0">
+                                <span>🎬</span> 视频示范
+                            </a>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 my-3 text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                            <div><span class="text-slate-400">目标肌群:</span> <span class="font-medium text-slate-700">${ex.target}</span></div>
+                            <div><span class="text-slate-400">推荐组数:</span> <span class="font-bold text-amber-600">${ex.setsReps}</span></div>
+                            <div class="col-span-2"><span class="text-slate-400">所需器械:</span> <span class="font-medium text-slate-700">${ex.equip}</span></div>
+                        </div>
+
+                        <div class="space-y-2 text-xs text-slate-600 leading-relaxed">
+                            <p><b>⚙️ 力学要领：</b>${ex.mechanics}</p>
+                            <p class="text-amber-800 bg-amber-50/60 p-2 rounded-lg border border-amber-100"><b>⚠️ 长肢体避坑：</b>${ex.pitfall}</p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function getDayName(day) {
+            switch(day) {
+                case 'warmup': return '热身/体态矫正';
+                case 'dayA': return '周一 Day A';
+                case 'dayB': return '周三 Day B';
+                case 'dayC': return '周五 Day C';
+                default: return '训练';
+            }
+        }
+
+        // Live Routine Interactive Checklist
+        function renderLiveRoutine() {
+            const selectedDay = document.getElementById('routine-select').value;
+            const container = document.getElementById('live-checklist');
+            container.innerHTML = '';
+
+            const exercises = exerciseData.filter(ex => ex.day === selectedDay);
+
+            exercises.forEach(ex => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3";
+                
+                let setCheckboxesHTML = '';
+                const totalSets = ex.setsReps.includes('4') ? 4 : 3;
+                for(let i=1; i<=totalSets; i++) {
+                    setCheckboxesHTML += `
+                        <label class="flex items-center gap-1 cursor-pointer bg-white px-2 py-1 rounded border border-slate-200 text-xs font-semibold">
+                            <input type="checkbox" onchange="toggleSetCheck(this)" class="accent-emerald-600 rounded">
+                            <span>组 ${i}</span>
+                        </label>
+                    `;
+                }
+
+                item.innerHTML = `
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800">${ex.nameCN}</h4>
+                        <p class="text-[10px] text-slate-500">${ex.setsReps} | ${ex.equip}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        ${setCheckboxesHTML}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleSetCheck(checkbox) {
+            if(checkbox.checked) {
+                completedSetsCount++;
+                // Auto trigger rest timer if not already running
+                if(!timerRunning) {
+                    resetTimer();
+                    toggleTimer();
+                }
+            } else {
+                completedSetsCount = Math.max(0, completedSetsCount - 1);
+            }
+            document.getElementById('completed-sets-count').innerText = completedSetsCount;
+        }
+
+        function resetDailyChecklist() {
+            completedSetsCount = 0;
+            document.getElementById('completed-sets-count').innerText = 0;
+            renderLiveRoutine();
+        }
+
+        // Rest Timer System
+        function setTimerPreset(sec) {
+            resetTimer();
+            timerSeconds = sec;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+            const s = (timerSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('start-timer-btn');
+            const status = document.getElementById('timer-status');
+
+            if(timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                btn.innerText = "继续计时";
+                btn.className = "flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-bold text-white transition shadow-lg";
+                status.innerText = "计时已暂停";
+            } else {
+                timerRunning = true;
+                btn.innerText = "暂停计时";
+                btn.className = "flex-1 py-3 bg-amber-600 hover:bg-amber-500 rounded-xl text-sm font-bold text-white transition shadow-lg";
+                status.innerText = "组间休息中... 保持深呼吸";
+
+                timerInterval = setInterval(() => {
+                    if(timerSeconds > 0) {
+                        timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        btn.innerText = "重新启动";
+                        btn.className = "flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-bold text-white transition shadow-lg";
+                        status.innerText = "⏰ 休息结束！请开启下一组训练";
+                        playBeep();
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerSeconds = 90;
+            updateTimerDisplay();
+            document.getElementById('start-timer-btn').innerText = "启动计时";
+            document.getElementById('start-timer-btn').className = "flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-sm font-bold text-white transition shadow-lg";
+            document.getElementById('timer-status').innerText = "准备就绪 - 点击启动";
+        }
+
+        function playBeep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+            } catch(e) {
+                // AudioContext fallback silently
+            }
+        }
+
+        // Nutrition & Calorie Dynamic Calculator
+        function calculateNutrition() {
+            const weight = parseFloat(document.getElementById('input-weight').value) || 60;
+            const goal = document.getElementById('input-goal').value;
+
+            // BMR (Mifflin-St Jeor approx for 182cm, 22yr male)
+            const bmr = (10 * weight) + (6.25 * 182) - (5 * 24) + 5;
+            const tdee = bmr * 1.375; // Lightly/Moderately active
+
+            let surplus = 300;
+            let expectedGain = "+1.2 kg";
+
+            if (goal === 'fast_bulk') {
+                surplus = 500;
+                expectedGain = "+1.8 kg";
+            } else if (goal === 'maintenance') {
+                surplus = 0;
+                expectedGain = "0.0 kg";
+            }
+
+            const totalCalories = Math.round(tdee + surplus);
+            const proteinGrams = Math.round(weight * 2.0); // 2.0g per kg
+            const fatGrams = Math.round((totalCalories * 0.25) / 9); // 25% fats
+            const carbGrams = Math.round((totalCalories - (proteinGrams * 4) - (fatGrams * 9)) / 4);
+            const waterLiters = (weight * 0.04).toFixed(1);
+
+            document.getElementById('out-calories').innerText = `${totalCalories} kcal`;
+            document.getElementById('out-protein').innerText = `${proteinGrams} g`;
+            document.getElementById('out-carbs').innerText = `${carbGrams} g`;
+            document.getElementById('out-fat').innerText = `${fatGrams} g`;
+            document.getElementById('out-water').innerText = `${waterLiters} L`;
+            document.getElementById('out-gain').innerText = expectedGain;
+        }
+
+        // Volume Progression Chart (Chart.js)
+        function initVolumeChart() {
+            const ctx = document.getElementById('volumeChart').getContext('2d');
+            
+            volumeChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['第1周', '第2周', '第3周', '第4周 (减载)', '第5周', '第6周', '第7周', '第8周'],
+                    datasets: [
+                        {
+                            label: '周累计训练容量 (kg × 次数)',
+                            data: [4200, 4550, 4900, 3600, 5200, 5600, 6000, 6450],
+                            borderColor: '#D97706',
+                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointBackgroundColor: '#D97706',
+                            pointRadius: 4
+                        },
+                        {
+                            label: '目标体重趋势 (kg)',
+                            data: [60.0, 60.3, 60.6, 60.8, 61.1, 61.4, 61.7, 62.1],
+                            borderColor: '#10B981',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.2,
+                            pointBackgroundColor: '#10B981',
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // Ensures respecting container height
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: "'Noto Sans SC', sans-serif",
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: '训练容量 (kg)',
+                                font: { size: 10 }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            min: 58,
+                            max: 65,
+                            grid: { drawOnChartArea: false },
+                            title: {
+                                display: true,
+                                text: '体重 (kg)',
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
