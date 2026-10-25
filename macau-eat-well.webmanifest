@@ -2,7 +2,7 @@
   "id": "/macau-eat-well.html",
   "name": "澳门好好吃 · 健康餐厅指南",
   "short_name": "澳门好好吃",
-  "description": "澳门餐厅均衡点餐指南，带收藏、复制和今日抽签。",
+  "description": "澳门餐厅均衡点餐指南，支持菜系筛选、价格抽签、收藏和名称复制。",
   "lang": "zh-CN",
   "start_url": "/macau-eat-well.html",
   "scope": "/macau-eat-well.html",
