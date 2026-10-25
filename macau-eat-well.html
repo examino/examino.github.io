@@ -9,6 +9,7 @@
   <meta name="application-name" content="澳门好好吃">
   <meta name="description" content="澳门餐厅的科学均衡点餐指南。查营业时间、人均预算、停车场名称，再抽一签决定今天吃哪家。">
   <title>澳门好好吃 · 今天吃哪家？</title>
+  <script>try{const saved=localStorage.getItem('macau-eat-well:theme');document.documentElement.dataset.theme=saved==='dark'||(saved!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'}catch{document.documentElement.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2218%22%20fill%3D%22%23174d3a%22%2F%3E%3Cg%20fill%3D%22%23eef2d9%22%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%228%22%20ry%3D%2224%22%2F%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%228%22%20ry%3D%2224%22%20transform%3D%22rotate(60%2032%2032)%22%2F%3E%3Cellipse%20cx%3D%2232%22%20cy%3D%2232%22%20rx%3D%228%22%20ry%3D%2224%22%20transform%3D%22rotate(120%2032%2032)%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%226%22%20fill%3D%22%23174d3a%22%2F%3E%3C%2Fsvg%3E%0A">
   <link rel="manifest" href="./macau-eat-well.webmanifest">
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
@@ -22,6 +23,58 @@
 .draw-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.draw-filters label{display:grid;gap:5px;color:#627055;font-size:10px}.draw-filters select{width:100%;min-width:0;padding:9px 8px;border:1px solid #cbd4bf;border-radius:4px;background:#f8f9f2;color:#38513c;font-size:11px}.selects{flex-wrap:wrap;justify-content:flex-end}.draw-panel .draw-button{margin-top:12px}
 @media(max-width:900px){.filter-row{align-items:flex-start;flex-direction:column}.selects{justify-content:flex-start}.selects label+label{border-left:0}}
 @media(max-width:560px){.draw-filters{grid-template-columns:1fr}.filter-row .selects{width:100%}.filter-row .selects label{flex:1 1 45%}.filter-row .selects select{max-width:none;width:100%}}
+.theme-toggle{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid #bfc9b8;padding:10px 13px;border-radius:24px;font-size:12px;white-space:nowrap}
+.theme-toggle>span:first-child{font-size:15px;line-height:1}
+@media(max-width:560px){.site-header{height:80px}.site-header nav{gap:8px}.site-header nav>a{display:none}.theme-toggle{padding:9px 11px}.nav-draw{padding:10px 12px}.nav-draw span{margin-left:4px}}
+[data-theme="dark"]{color-scheme:dark;--ink:#e5ece4;--green:#a0c7aa;--muted:#b0bbae;--paper:#151b18;--line:#39453d;--pale:#24322a;--orange:#e3a67e;--white:#202923}
+[data-theme="dark"] body{background:var(--paper);color:var(--ink)}
+[data-theme="dark"] .site-header{border-color:var(--line)}
+[data-theme="dark"] .brand-mark{color:var(--green)}
+[data-theme="dark"] .nav-draw,[data-theme="dark"] .theme-toggle{border-color:#526456;color:var(--ink)}
+[data-theme="dark"] .hero h1 span{color:#b5c98f}
+[data-theme="dark"] .hero h1>svg{stroke:#879c70}
+[data-theme="dark"] .eyebrow,[data-theme="dark"] .section-heading .eyebrow{color:#b4c18f}
+[data-theme="dark"] .hero-facts i{background:#46534a}
+[data-theme="dark"] .draw-panel{border-color:#3a4b3c}
+[data-theme="dark"] .stamp{border-color:#788b67;color:#c2d3a3}
+[data-theme="dark"] .draw-panel>p{color:#bbc7b1}
+[data-theme="dark"] .draw-panel>p.draw-foot{color:#9eaa9d}
+[data-theme="dark"] .draw-button{background:#47765b;color:#fff}
+[data-theme="dark"] .draw-button:hover{background:#56896a}
+[data-theme="dark"] .draw-option{color:#d0d9c9}
+[data-theme="dark"] .search-box,[data-theme="dark"] .favorite-filter{background:#202923;border-color:#46534a;color:var(--ink)}
+[data-theme="dark"] .search-box input{color:var(--ink)}
+[data-theme="dark"] .search-box input::placeholder,[data-theme="dark"] .search-box kbd{color:#a7b2a5}
+[data-theme="dark"] .search-box kbd{border-color:#46534a}
+[data-theme="dark"] .favorite-filter[aria-pressed=true]{background:#344638;border-color:#7d9b73}
+[data-theme="dark"] .area-tabs button{color:#c1ccb8}
+[data-theme="dark"] .area-tabs button.active{background:#47765b;color:#fff}
+[data-theme="dark"] .selects select{color:#d0d9ca}
+[data-theme="dark"] .filter-panel{border-color:#46534a}
+[data-theme="dark"] .count-pill{border-color:#596a57}
+[data-theme="dark"] .restaurant-card{background:#1d2520;border-color:#364239;box-shadow:0 8px 24px #0002}
+[data-theme="dark"] .card-kicker,[data-theme="dark"] .english-name,[data-theme="dark"] .price-line small{color:#b0bbae}
+[data-theme="dark"] .tag{background:#2b3830;color:#d5dfd1;border-color:#405044}
+[data-theme="dark"] .tag.evidence{background:#302d24;color:#e4cd9b;border-color:#62543b}
+[data-theme="dark"] .description,[data-theme="dark"] .card-info,[data-theme="dark"] .info-line{color:#d3dcd1}
+[data-theme="dark"] .food-note{background:#29362d;color:#d7e0d3}
+[data-theme="dark"] .food-note b,[data-theme="dark"] .detail-content b{color:#c1d49b}
+[data-theme="dark"] .info-line{border-color:#38443b}
+[data-theme="dark"] .parking-kind{color:#b9c992}
+[data-theme="dark"] .status-note{color:#e4c58e}
+[data-theme="dark"] .card-details{border-color:#39453d}
+[data-theme="dark"] .card-details summary,[data-theme="dark"] .detail-content{color:#c8d2c5}
+[data-theme="dark"] .copy-button{background:#47765b;color:#fff}
+[data-theme="dark"] .copy-button.secondary{background:#2b3830;color:#dce6d8;border-color:#526456}
+[data-theme="dark"] .parking-unknown{color:#b0bbae}
+[data-theme="dark"] .load-more{background:#202923;color:var(--ink);border-color:#526456}
+[data-theme="dark"] .principles{background:#202923;border-color:#3b483e}
+[data-theme="dark"] .principle-items{color:#d0d9cc}
+[data-theme="dark"] .principle-links a,[data-theme="dark"] .source-links a{color:#b9d5bb}
+[data-theme="dark"] .footer{border-color:#39453d;color:#aeb8ad}
+[data-theme="dark"] .draw-dialog,[data-theme="dark"] .install-dialog{background:#202923;color:var(--ink);border-color:#46534a}
+[data-theme="dark"] .draw-filters select,[data-theme="dark"] select option{background:#202923;color:var(--ink)}
+[data-theme="dark"] #toast{background:#e5ece4;color:#18211b}
 
 </style>
   
@@ -30,7 +83,7 @@
   <a class="skip" href="#restaurants">跳到餐厅列表</a>
   <header class="site-header wrap">
     <a href="#" class="brand" aria-label="澳门好好吃首页"><span class="brand-mark" aria-hidden="true">✳</span><span>澳门好好吃<small>MACAU · EAT WELL</small></span></a>
-    <nav aria-label="主导航"><a href="#restaurants">找餐厅</a><a href="#principles">健康怎么选</a><button class="nav-draw" data-draw>帮我选一家 <span aria-hidden="true">↗</span></button></nav>
+    <nav aria-label="主导航"><a href="#restaurants">找餐厅</a><a href="#principles">健康怎么选</a><button class="theme-toggle" id="themeToggle" type="button" aria-label="开启夜间模式" title="开启夜间模式"><span aria-hidden="true">☾</span><span class="theme-toggle-label">夜间</span></button><button class="nav-draw" data-draw>帮我选一家 <span aria-hidden="true">↗</span></button></nav>
   </header>
   <main>
     <section class="hero wrap">
@@ -66,6 +119,22 @@
 'use strict';
 (() => {
   const $ = (s) => document.querySelector(s);
+  const themeButton = $('#themeToggle');
+  function setTheme(theme, save = true) {
+    const dark = theme === 'dark';
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    if (themeButton) {
+      const label = dark ? '日间' : '夜间';
+      const action = dark ? '切换为日间模式' : '切换为夜间模式';
+      themeButton.setAttribute('aria-label', action);
+      themeButton.title = action;
+      themeButton.innerHTML = `<span aria-hidden="true">${dark ? '☀' : '☾'}</span><span class="theme-toggle-label">${label}</span>`;
+    }
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#151b18' : '#174d3a');
+    document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')?.setAttribute('content', dark ? 'black' : 'default');
+    if (save) try { localStorage.setItem('macau-eat-well:theme', dark ? 'dark' : 'light'); } catch {}
+  }
+  themeButton?.addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
   const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const safeUrl = (url) => { try { const u = new URL(url); return u.protocol === 'https:' ? u.href : '#'; } catch { return '#'; } };
   const state = {restaurants:[],area:'all',query:'',budget:'all',cuisine:'all',parking:'all',sort:'recommended',drawBudget:'all',drawCuisine:'all',favoritesOnly:false,limit:9,drawing:false};

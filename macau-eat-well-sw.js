@@ -1,4 +1,4 @@
-const CACHE_NAME = 'macau-eat-well-v2';
+const CACHE_NAME = 'macau-eat-well-v3';
 const APP_URL = '/macau-eat-well.html';
 const PRECACHE = [
   APP_URL,
