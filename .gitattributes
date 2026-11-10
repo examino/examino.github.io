@@ -1,3 +1,5 @@
 /index.html text eol=lf
 /sw.js text eol=lf
 /manifest.webmanifest text eol=lf
+/payloads/*.bin binary
+/assets/*.webp binary
